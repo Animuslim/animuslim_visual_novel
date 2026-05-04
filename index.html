@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Animuslim - Les Aventures Islamiques</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #1a0e2e;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    overflow: hidden;
+    user-select: none;
+    color: #fff;
+  }
+  #app { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+  /* ===== SCREEN BASE ===== */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .screen.active { display: flex; }
+  .screen.visible { opacity: 1; }
+
+  /* ===== TITLE SCREEN ===== */
+  #screen-title {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: url('assets/backgrounds/oasis.png') center/cover, #1a0e2e;
+    cursor: pointer;
+  }
+  #screen-title::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(15,8,30,0.85) 100%);
+  }
+  .title-content {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+  }
+  .title-main {
+    font-size: 8rem;
+    font-weight: 900;
+    color: #ffd97a;
+    letter-spacing: 8px;
+    text-shadow: 0 6px 30px rgba(0,0,0,0.9), 0 0 50px rgba(255,200,80,0.5);
+    margin-bottom: 10px;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  .title-sub {
+    font-size: 1.8rem;
+    color: #fff8e0;
+    letter-spacing: 3px;
+    margin-bottom: 80px;
+    opacity: 0.92;
+  }
+  .title-bismillah {
+    font-size: 3rem;
+    color: #ffd97a;
+    direction: rtl;
+    margin-bottom: 60px;
+    text-shadow: 0 0 25px rgba(255,200,80,0.6);
+    font-family: 'Times New Roman', serif;
+  }
+  .title-cta {
+    font-size: 1.3rem;
+    color: rgba(255,255,255,0.85);
+    margin-top: 30px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* ===== LANGUAGE SCREEN ===== */
+  #screen-lang {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a0e2e 0%, #2c1654 50%, #1a0e2e 100%);
+  }
+  .lang-title {
+    font-size: 2.8rem;
+    color: #ffd97a;
+    margin-bottom: 60px;
+    text-shadow: 0 0 30px rgba(255,200,80,0.4);
+    text-align: center;
+  }
+  .lang-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255,248,224,0.85);
+    margin-bottom: 50px;
+  }
+  .lang-buttons {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .lang-btn {
+    width: 220px;
+    height: 240px;
+    background: linear-gradient(to bottom, rgba(60,40,120,0.9), rgba(40,20,80,0.95));
+    border: 3px solid #d4af37;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: #fff;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+  }
+  .lang-btn:hover {
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 15px 40px rgba(212,175,55,0.4), 0 0 40px rgba(255,200,80,0.3);
+    border-color: #ffd97a;
+  }
+  .lang-flag {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    color: #ffd97a;
+    letter-spacing: 4px;
+  }
+  .lang-name { font-size: 1.5rem; font-weight: bold; }
+  .lang-native { font-size: 1rem; color: #ffe8a8; margin-top: 6px; }
+
+  /* ===== MAIN MENU ===== */
+  #screen-menu {
+    flex-direction: column;
+    background: linear-gradient(135deg, #1a0e2e 0%, #2c1654 100%);
+    padding: 30px 50px;
+    overflow-y: auto !important;
+  }
+  .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 20px;
+    border-bottom: 2px solid rgba(212,175,55,0.4);
+    margin-bottom: 25px;
+  }
+  .menu-header h1 {
+    font-size: 2.5rem;
+    color: #ffd97a;
+    letter-spacing: 2px;
+  }
+  .menu-header .lang-switch {
+    background: rgba(60,40,120,0.6);
+    border: 2px solid #d4af37;
+    color: #ffd97a;
+    font-size: 1rem;
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding-bottom: 40px;
+  }
+  .category-card {
+    background: linear-gradient(to bottom right, rgba(70,50,140,0.85), rgba(40,20,80,0.95));
+    border: 2px solid rgba(212,175,55,0.5);
+    border-radius: 18px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    position: relative;
+    overflow: hidden;
+  }
+  .category-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(to right, transparent, #ffd97a, transparent);
+  }
+  .category-card:hover {
+    transform: translateY(-6px);
+    border-color: #ffd97a;
+    box-shadow: 0 12px 30px rgba(212,175,55,0.4);
+  }
+  .category-card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .category-card.disabled:hover { transform: none; }
+  .category-icon {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd97a, #d4af37);
+    color: #2a1a05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(212,175,55,0.4);
+  }
+  .category-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .category-desc {
+    font-size: 0.95rem;
+    color: rgba(255,248,224,0.75);
+    flex-grow: 1;
+    line-height: 1.4;
+  }
+  .category-status {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #ffd97a;
+    font-weight: bold;
+  }
+  .category-status.coming {
+    color: rgba(255,200,150,0.7);
+    font-style: italic;
+  }
+
+  /* ===== CATEGORY VIEW ===== */
+  #screen-category {
+    flex-direction: column;
+    background: linear-gradient(135deg, #1a0e2e 0%, #2c1654 100%);
+    padding: 30px 50px;
+    overflow-y: auto !important;
+  }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0 20px;
+    border-bottom: 2px solid rgba(212,175,55,0.4);
+    margin-bottom: 25px;
+  }
+  .back-btn {
+    background: rgba(60,40,120,0.6);
+    border: 2px solid #d4af37;
+    color: #ffd97a;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .back-btn:hover { background: rgba(80,60,160,0.8); }
+  .category-header h1 {
+    font-size: 2.2rem;
+    color: #ffd97a;
+  }
+  .episode-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 40px;
+  }
+  .episode-card {
+    background: linear-gradient(to right, rgba(70,50,140,0.7), rgba(40,20,80,0.9));
+    border: 2px solid rgba(212,175,55,0.5);
+    border-radius: 14px;
+    padding: 20px 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .episode-card:hover {
+    transform: translateX(6px);
+    border-color: #ffd97a;
+    box-shadow: 0 6px 20px rgba(212,175,55,0.3);
+  }
+  .episode-num {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #ffd97a;
+    min-width: 60px;
+  }
+  .episode-info { flex-grow: 1; }
+  .episode-info h3 { font-size: 1.4rem; color: #fff; margin-bottom: 6px; }
+  .episode-info p { font-size: 1rem; color: rgba(255,248,224,0.7); }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: rgba(255,255,255,0.5);
+  }
+  .empty-state h2 { font-size: 2rem; color: #ffd97a; margin-bottom: 15px; }
+  .empty-state p { font-size: 1.1rem; line-height: 1.6; }
+
+  /* ===== EPISODE PLAYER ===== */
+  #screen-episode {
+    flex-direction: column;
+    background: #000;
+    cursor: pointer;
+  }
+  #stage {
+    position: relative;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+  }
+  .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+  #ep-bg {
+    background-size: cover; background-position: center;
+    transition: background-image 0.8s ease;
+  }
+  #ep-fx { mix-blend-mode: screen; opacity: 0; transition: opacity 0.4s ease; }
+  #ep-fx video { width: 100%; height: 100%; object-fit: cover; }
+
+  .character {
+    position: absolute;
+    bottom: 0;
+    height: 75%;
+    transition: all 0.6s cubic-bezier(.25,.8,.25,1), filter 0.4s ease, opacity 0.4s ease;
+    opacity: 0;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.45));
+  }
+  .character.show { opacity: 1; }
+  .character.left { left: -10%; }
+  .character.right { right: -10%; }
+  .character.inactive {
+    filter: brightness(0.5) drop-shadow(0 10px 25px rgba(0,0,0,0.45));
+    opacity: 0.65;
+    transform: scale(0.92);
+  }
+  .character.left.inactive { transform: scale(0.92) translateX(-3%); }
+  .character.right.inactive { transform: scale(0.92) translateX(3%); }
+  .character.speaking {
+    filter: drop-shadow(0 -8px 25px rgba(255, 220, 120, 0.55)) drop-shadow(0 10px 25px rgba(0,0,0,0.45));
+  }
+  .character.bounce { animation: bounce 0.6s ease infinite alternate; }
+  @keyframes bounce {
+    from { transform: translateY(0) scale(1); }
+    to   { transform: translateY(-20px) scale(1.03); }
+  }
+  .character.left.bounce { left: -10%; transform: translateY(0); }
+  .character.flip-x { transform: scaleX(-1); }
+  .character.flip-x.left.inactive { transform: scaleX(-1) scale(0.92) translateX(3%); }
+  .character.flip-x.right.inactive { transform: scaleX(-1) scale(0.92) translateX(-3%); }
+
+  #ep-dialogue {
+    position: absolute;
+    bottom: 40px;
+    left: 5%; right: 5%;
+    background: linear-gradient(to bottom, rgba(20,15,40,0.92), rgba(40,30,80,0.96));
+    border: 3px solid #d4af37;
+    border-radius: 18px;
+    padding: 20px 30px;
+    color: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(212,175,55,0.15);
+    z-index: 30;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.4s ease;
+    min-height: 130px;
+  }
+  #ep-dialogue.show { opacity: 1; transform: translateY(0); }
+  #ep-speaker { color: #ffd97a; font-weight: bold; font-size: 1.2rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  #ep-text { font-size: 1.4rem; line-height: 1.5; color: #fff; }
+  .arabic { font-size: 2.2rem; color: #ffd97a; text-align: center; margin: 10px 0 5px; direction: rtl; font-family: 'Times New Roman', serif; }
+  .translit { font-style: italic; color: #ffe8a8; text-align: center; margin-bottom: 5px; }
+
+  #ep-choices {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column;
+    gap: 15px;
+    width: 70%;
+    max-width: 700px;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  #ep-choices.show { opacity: 1; pointer-events: auto; }
+  .ep-choice {
+    background: linear-gradient(to right, rgba(40,30,80,0.95), rgba(70,50,140,0.95));
+    border: 2px solid #d4af37;
+    color: white;
+    font-size: 1.3rem;
+    padding: 16px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  .ep-choice:hover {
+    background: linear-gradient(to right, rgba(80,60,160,0.95), rgba(120,90,210,0.95));
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(212,175,55,0.5);
+  }
+
+  #ep-recap {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle, rgba(255,220,150,0.95), rgba(220,170,80,0.9));
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    z-index: 60;
+    color: #2a1a05;
+    padding: 40px;
+    text-align: center;
+  }
+  #ep-recap.show { display: flex; }
+  #ep-recap h2 { font-size: 3rem; margin-bottom: 30px; color: #4a2a05; }
+  #ep-recap ul { font-size: 1.5rem; list-style: none; line-height: 2.2; }
+  #ep-recap ul li { opacity: 0; transform: translateX(-30px); transition: all 0.5s ease; }
+  #ep-recap ul li.show { opacity: 1; transform: translateX(0); }
+  .recap-buttons { display: flex; gap: 20px; margin-top: 40px; }
+  .recap-buttons button {
+    background: #4a2a05; color: #ffd97a; border: none;
+    font-size: 1.2rem; padding: 14px 30px; border-radius: 10px; cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .recap-buttons button:hover { background: #6a3a08; transform: scale(1.05); }
+
+  .halo {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at center 60%, rgba(255,220,120,0.5), transparent 50%);
+    z-index: 5; opacity: 0; pointer-events: none;
+    transition: opacity 0.8s ease;
+  }
+  .halo.show { opacity: 1; }
+
+  #ep-back {
+    position: absolute; top: 20px; left: 20px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #d4af37;
+    color: #ffd97a;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 100;
+  }
+  #ep-back:hover { background: rgba(0,0,0,0.85); }
+
+  #ep-hint {
+    position: absolute; bottom: 8px; right: 16px;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.9rem;
+    z-index: 35;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TITLE SCREEN -->
+  <div class="screen" id="screen-title">
+    <div class="title-content">
+      <div class="title-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+      <h1 class="title-main">Animuslim</h1>
+      <p class="title-sub" id="title-tagline">Les Aventures Islamiques pour Enfants</p>
+      <p class="title-cta" id="title-cta">Cliquez n'importe où pour commencer</p>
+    </div>
+  </div>
+
+  <!-- LANGUAGE SCREEN -->
+  <div class="screen" id="screen-lang">
+    <h2 class="lang-title" id="lang-title">Choisis ta langue</h2>
+    <p class="lang-subtitle" id="lang-subtitle">Choose your language · Pilih bahasa</p>
+    <div class="lang-buttons">
+      <div class="lang-btn" data-lang="fr">
+        <div class="lang-flag">FR</div>
+        <div class="lang-name">Français</div>
+        <div class="lang-native">French</div>
+      </div>
+      <div class="lang-btn" data-lang="en">
+        <div class="lang-flag">EN</div>
+        <div class="lang-name">English</div>
+        <div class="lang-native">English</div>
+      </div>
+      <div class="lang-btn" data-lang="id">
+        <div class="lang-flag">ID</div>
+        <div class="lang-name">Bahasa Indonesia</div>
+        <div class="lang-native">Indonesian</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN MENU -->
+  <div class="screen" id="screen-menu">
+    <div class="menu-header">
+      <h1 id="menu-title">Choisis un cours</h1>
+      <button class="lang-switch" id="lang-switch">FR / EN / ID</button>
+    </div>
+    <div class="menu-grid" id="menu-grid"></div>
+  </div>
+
+  <!-- CATEGORY VIEW -->
+  <div class="screen" id="screen-category">
+    <div class="category-header">
+      <button class="back-btn" id="cat-back">← Retour</button>
+      <h1 id="cat-title"></h1>
+    </div>
+    <div class="episode-list" id="episode-list"></div>
+  </div>
+
+  <!-- EPISODE PLAYER -->
+  <div class="screen" id="screen-episode">
+    <div id="stage">
+      <div id="ep-bg" class="layer"></div>
+      <div class="halo" id="ep-halo"></div>
+      <div id="ep-fx" class="layer">
+        <video id="ep-fx-video" muted playsinline></video>
+      </div>
+      <img class="character flip-x" id="ep-mom" src="assets/characters/ustaz_ahmed.png">
+      <img class="character" id="ep-yusuf" src="assets/characters/yusuf_neutre.png">
+      <button id="ep-back">← Menu</button>
+      <div id="ep-dialogue">
+        <div id="ep-speaker"></div>
+        <div id="ep-text"></div>
+      </div>
+      <div id="ep-choices"></div>
+      <div id="ep-recap">
+        <h2 id="ep-recap-title">Ce que j'ai appris</h2>
+        <ul id="ep-recap-list"></ul>
+        <div class="recap-buttons">
+          <button id="recap-replay">Rejouer ↻</button>
+          <button id="recap-menu">Retour au menu</button>
+        </div>
+      </div>
+      <div id="ep-hint">Cliquez pour avancer</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// =============================================================
+//   TRANSLATIONS
+// =============================================================
+const T = {
+  fr: {
+    title_tagline: "Les Aventures Islamiques pour Enfants",
+    title_cta: "Cliquez n'importe où pour commencer",
+    lang_title: "Choisis ta langue",
+    menu_title: "Choisis un cours",
+    back: "← Retour",
+    back_menu: "← Menu",
+    coming_soon: "{n} histoire(s) à venir",
+    available: "{n} histoire(s) disponible(s)",
+    empty_title: "Histoires en préparation",
+    empty_desc: "Découvre ci-dessous les histoires qui seront bientôt disponibles dans cette catégorie. Reviens régulièrement !",
+    upcoming: "Histoires à venir",
+    locked: "Bientôt",
+    explore_first: "Joue d'abord aux histoires disponibles",
+    recap_title: "Ce que j'ai appris",
+    recap_replay: "Rejouer ↻",
+    recap_menu: "Retour au menu",
+    click_to_continue: "Cliquez pour avancer"
+  },
+  en: {
+    title_tagline: "Islamic Adventures for Children",
+    title_cta: "Click anywhere to start",
+    lang_title: "Choose your language",
+    menu_title: "Choose a course",
+    back: "← Back",
+    back_menu: "← Menu",
+    coming_soon: "{n} story/stories upcoming",
+    available: "{n} story/stories available",
+    empty_title: "Stories in preparation",
+    empty_desc: "Discover below the stories that will soon be available in this category. Check back regularly!",
+    upcoming: "Upcoming stories",
+    locked: "Soon",
+    explore_first: "First play the available stories",
+    recap_title: "What I Learned",
+    recap_replay: "Replay ↻",
+    recap_menu: "Back to menu",
+    click_to_continue: "Click to continue"
+  },
+  id: {
+    title_tagline: "Petualangan Islami untuk Anak-Anak",
+    title_cta: "Klik di mana saja untuk memulai",
+    lang_title: "Pilih bahasamu",
+    menu_title: "Pilih sebuah pelajaran",
+    back: "← Kembali",
+    back_menu: "← Menu",
+    coming_soon: "{n} cerita akan datang",
+    available: "{n} cerita tersedia",
+    empty_title: "Cerita sedang dipersiapkan",
+    empty_desc: "Temukan di bawah ini cerita-cerita yang akan segera tersedia dalam kategori ini. Kunjungi kembali secara berkala!",
+    upcoming: "Cerita akan datang",
+    locked: "Segera",
+    explore_first: "Mainkan dulu cerita yang tersedia",
+    recap_title: "Apa yang Saya Pelajari",
+    recap_replay: "Putar ulang ↻",
+    recap_menu: "Kembali ke menu",
+    click_to_continue: "Klik untuk melanjutkan"
+  }
+};
+
+// =============================================================
+//   CATEGORIES
+// =============================================================
+const CATEGORIES = [
+  {
+    id: 'asma', letter: 'A', color: '#ff9d6c',
+    name: { fr: '99 Noms d\'Allah', en: '99 Names of Allah', id: '99 Nama Allah' },
+    desc: { fr: 'Découvre les 99 plus beaux noms d\'Allah à travers 99 histoires.', en: 'Discover the 99 beautiful names of Allah through 99 stories.', id: 'Temukan 99 nama indah Allah melalui 99 cerita.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'Ar-Rahman — Le Tout-Miséricordieux', en: 'Ar-Rahman — The Most Merciful', id: 'Ar-Rahman — Yang Maha Pengasih' },
+      { fr: 'Ar-Rahim — Le Très-Miséricordieux', en: 'Ar-Rahim — The Especially Merciful', id: 'Ar-Rahim — Yang Maha Penyayang' },
+      { fr: 'Al-Malik — Le Souverain', en: 'Al-Malik — The Sovereign', id: 'Al-Malik — Yang Maha Berkuasa' },
+      { fr: 'Al-Quddus — Le Pur', en: 'Al-Quddus — The Pure', id: 'Al-Quddus — Yang Maha Suci' },
+      { fr: 'As-Salam — La Source de paix', en: 'As-Salam — Source of Peace', id: 'As-Salam — Sumber Kedamaian' },
+      { fr: '... et 94 autres noms à découvrir', en: '... and 94 more names to discover', id: '... dan 94 nama lainnya untuk ditemukan' }
+    ]
+  },
+  {
+    id: 'prophets', letter: 'P', color: '#b4d4a4',
+    name: { fr: 'Histoires des Prophètes', en: 'Stories of the Prophets', id: 'Kisah Para Nabi' },
+    desc: { fr: 'Les vies inspirantes des prophètes d\'Allah, de Adam à Muhammad ﷺ.', en: 'The inspiring lives of Allah\'s prophets, from Adam to Muhammad ﷺ.', id: 'Kehidupan inspiratif para nabi Allah, dari Adam hingga Muhammad ﷺ.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'Adam — Le premier homme et la création', en: 'Adam — The first man and creation', id: 'Adam — Manusia pertama dan penciptaan' },
+      { fr: 'Nuh — L\'arche et le grand déluge', en: 'Nuh — The ark and the great flood', id: 'Nuh — Bahtera dan banjir besar' },
+      { fr: 'Ibrahim — Le briseur d\'idoles', en: 'Ibrahim — The breaker of idols', id: 'Ibrahim — Penghancur berhala' },
+      { fr: 'Yusuf — Le rêve et le pardon', en: 'Yusuf — The dream and forgiveness', id: 'Yusuf — Mimpi dan pengampunan' },
+      { fr: 'Musa — La mer fendue', en: 'Musa — The parted sea', id: 'Musa — Laut yang terbelah' },
+      { fr: 'Sulayman — Le roi qui parlait aux animaux', en: 'Sulayman — The king who spoke to animals', id: 'Sulayman — Raja yang berbicara dengan hewan' },
+      { fr: 'ʿIsa — Les miracles de Jésus', en: 'ʿIsa — The miracles of Jesus', id: 'ʿIsa — Mukjizat Isa' }
+    ]
+  },
+  {
+    id: 'biography', letter: 'M', color: '#9ec0ff',
+    name: { fr: 'Biographie du Prophète ﷺ', en: 'Biography of the Prophet ﷺ', id: 'Biografi Nabi ﷺ' },
+    desc: { fr: 'La vie du Prophète Muhammad ﷺ, de sa naissance à sa mission.', en: 'The life of Prophet Muhammad ﷺ, from his birth to his mission.', id: 'Kehidupan Nabi Muhammad ﷺ, dari kelahirannya hingga misinya.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'La naissance à Makkah', en: 'Birth in Makkah', id: 'Kelahiran di Makkah' },
+      { fr: 'L\'enfance avec Halima', en: 'Childhood with Halima', id: 'Masa kecil bersama Halima' },
+      { fr: 'Le mariage avec Khadija', en: 'Marriage to Khadija', id: 'Pernikahan dengan Khadijah' },
+      { fr: 'La première révélation à Hira', en: 'The first revelation at Hira', id: 'Wahyu pertama di Hira' },
+      { fr: 'La hijrah vers Madinah', en: 'The hijrah to Madinah', id: 'Hijrah ke Madinah' },
+      { fr: 'La conquête de Makkah', en: 'The conquest of Makkah', id: 'Penaklukan Makkah' }
+    ]
+  },
+  {
+    id: 'quran', letter: 'Q', color: '#d4af37',
+    name: { fr: 'Histoire du Coran', en: 'History of the Quran', id: 'Sejarah Al-Quran' },
+    desc: { fr: 'Comment le Coran fut révélé, préservé et transmis à travers les siècles.', en: 'How the Quran was revealed, preserved, and transmitted through the centuries.', id: 'Bagaimana Al-Quran diturunkan, dijaga, dan diwariskan selama berabad-abad.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'Jibril descend vers le Prophète ﷺ', en: 'Jibril descends to the Prophet ﷺ', id: 'Jibril turun kepada Nabi ﷺ' },
+      { fr: 'La compilation par Abu Bakr', en: 'Compilation by Abu Bakr', id: 'Penghimpunan oleh Abu Bakr' },
+      { fr: 'Le Coran de ʿUthman', en: 'The Quran of ʿUthman', id: 'Al-Quran ʿUthman' },
+      { fr: 'Les 7 lectures du Coran', en: 'The 7 readings of the Quran', id: 'Tujuh bacaan Al-Quran' },
+      { fr: 'Pourquoi le Coran est inimitable', en: 'Why the Quran is inimitable', id: 'Mengapa Al-Quran tidak bisa ditiru' }
+    ]
+  },
+  {
+    id: 'tawhid', letter: '1', color: '#ffd97a',
+    name: { fr: 'Tawhid', en: 'Tawhid (Oneness)', id: 'Tauhid' },
+    desc: { fr: 'L\'unicité d\'Allah expliquée simplement aux enfants.', en: 'The Oneness of Allah explained simply for children.', id: 'Keesaan Allah dijelaskan secara sederhana untuk anak-anak.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'Le secret du ciel étoilé — Qui a tout créé ?', en: 'The secret of the starry sky — Who created everything?', id: 'Rahasia langit berbintang — Siapa yang menciptakan semua?' },
+      { fr: 'À qui appartient le monde ? (Rububiyya)', en: 'Who owns the world? (Rububiyya)', id: 'Siapa pemilik dunia? (Rububiyya)' },
+      { fr: 'Pour qui sont nos prières ? (Uluhiyya)', en: 'Who do we pray to? (Uluhiyya)', id: 'Kepada siapa kita berdoa? (Uluhiyya)' },
+      { fr: 'Allah n\'a pas d\'égal — Les noms et attributs', en: 'Allah has no equal — Names and attributes', id: 'Allah tidak ada yang sebanding — Nama-nama dan sifat' },
+      { fr: 'La Shahada — Le mot le plus important', en: 'The Shahada — The most important word', id: 'Syahadat — Kata yang paling penting' }
+    ]
+  },
+  {
+    id: 'arabic_alphabet', letter: 'ا', color: '#c9a0ff',
+    name: { fr: 'Alphabet arabe', en: 'Arabic Alphabet', id: 'Alfabet Arab' },
+    desc: { fr: 'Apprends les 28 lettres arabes en jouant.', en: 'Learn the 28 Arabic letters while playing.', id: 'Pelajari 28 huruf Arab sambil bermain.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'Alif (ا) — La première lettre', en: 'Alif (ا) — The first letter', id: 'Alif (ا) — Huruf pertama' },
+      { fr: 'Ba (ب) — Comme « Bismillah »', en: 'Ba (ب) — Like "Bismillah"', id: 'Ba (ب) — Seperti "Bismillah"' },
+      { fr: 'Ta (ت), Tha (ث), Jim (ج)... 25 autres lettres', en: 'Ta (ت), Tha (ث), Jim (ج)... 25 more letters', id: 'Ta (ت), Tha (ث), Jim (ج)... 25 huruf lagi' }
+    ]
+  },
+  {
+    id: 'tajwid', letter: 'T', color: '#a4d4d4',
+    name: { fr: 'Règles du Tajwid', en: 'Tajwid Rules', id: 'Aturan Tajwid' },
+    desc: { fr: 'Les règles de la belle récitation du Coran.', en: 'The rules of beautiful Quran recitation.', id: 'Aturan-aturan untuk membaca Al-Quran dengan indah.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'Les sons et leur articulation', en: 'Sounds and their articulation', id: 'Bunyi dan artikulasinya' },
+      { fr: 'Sukun et shadda', en: 'Sukun and shadda', id: 'Sukun dan syaddah' },
+      { fr: 'Idgham — Quand les lettres se rejoignent', en: 'Idgham — When letters merge', id: 'Idgham — Ketika huruf menyatu' },
+      { fr: 'Ikhfa — Le son caché', en: 'Ikhfa — The hidden sound', id: 'Ikhfa — Bunyi tersembunyi' },
+      { fr: 'Madd — La prolongation', en: 'Madd — Lengthening', id: 'Madd — Pemanjangan' },
+      { fr: 'Qalqala — La vibration', en: 'Qalqala — The vibration', id: 'Qalqalah — Getaran' }
+    ]
+  },
+  {
+    id: 'arabic_lang', letter: 'ع', color: '#ffb3b3',
+    name: { fr: 'Langue arabe', en: 'Arabic Language', id: 'Bahasa Arab' },
+    desc: { fr: 'Apprends à parler arabe avec Yusuf et ses amis.', en: 'Learn to speak Arabic with Yusuf and his friends.', id: 'Belajar berbicara bahasa Arab dengan Yusuf dan teman-temannya.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'As-Salamu ʿalaykum — Saluer en arabe', en: 'As-Salamu ʿalaykum — Greeting in Arabic', id: 'As-Salamu ʿalaykum — Menyapa dalam bahasa Arab' },
+      { fr: 'Ma famille — Présenter les siens', en: 'My family — Introducing your loved ones', id: 'Keluargaku — Memperkenalkan orang tercinta' },
+      { fr: 'Les couleurs et les animaux', en: 'Colors and animals', id: 'Warna dan hewan' },
+      { fr: 'Compter de 1 à 10 en arabe', en: 'Counting 1 to 10 in Arabic', id: 'Berhitung 1 sampai 10 dalam bahasa Arab' },
+      { fr: 'Les jours de la semaine', en: 'Days of the week', id: 'Hari-hari dalam seminggu' }
+    ]
+  },
+  {
+    id: 'companions', letter: 'S', color: '#ffe49a',
+    name: { fr: 'Histoires des Compagnons', en: 'Stories of the Companions', id: 'Kisah Para Sahabat' },
+    desc: { fr: 'Les vies extraordinaires des Sahaba, compagnons du Prophète ﷺ.', en: 'The extraordinary lives of the Sahaba, companions of the Prophet ﷺ.', id: 'Kehidupan luar biasa para Sahabat Nabi ﷺ.' },
+    episodes: [],
+    upcoming: [
+      { fr: 'Abu Bakr — Le véridique et premier calife', en: 'Abu Bakr — The truthful and first caliph', id: 'Abu Bakr — Yang jujur dan khalifah pertama' },
+      { fr: 'ʿUmar ibn al-Khattab — Le juste', en: 'ʿUmar ibn al-Khattab — The just', id: 'ʿUmar ibn al-Khattab — Yang adil' },
+      { fr: 'Bilal — Le premier muezzin', en: 'Bilal — The first muezzin', id: 'Bilal — Muadzin pertama' },
+      { fr: 'Khadija — Première musulmane', en: 'Khadija — First Muslim woman', id: 'Khadijah — Muslimah pertama' },
+      { fr: 'Khalid ibn al-Walid — Le sabre d\'Allah', en: 'Khalid ibn al-Walid — The sword of Allah', id: 'Khalid ibn al-Walid — Pedang Allah' }
+    ]
+  },
+  {
+    id: 'morals', letter: '★', color: '#ffd97a',
+    name: { fr: 'Histoires & Morales (5 piliers + Adab)', en: 'Stories & Morals (5 Pillars + Adab)', id: 'Kisah & Moral (5 Rukun + Adab)' },
+    desc: { fr: 'Les 5 piliers de l\'islam, l\'étiquette islamique (adab) et des aventures originales.', en: 'The 5 pillars of Islam, Islamic etiquette (adab), and original adventures.', id: 'Lima rukun Islam, etiket Islam (adab), dan petualangan asli.' },
+    episodes: ['bismillah', 'bienvenue_laura'],
+    upcoming: [
+      { fr: 'Pilier 1 — La Shahada de Hamid', en: 'Pillar 1 — Hamid\'s Shahada', id: 'Rukun 1 — Syahadat Hamid' },
+      { fr: 'Pilier 2 — Apprendre le wudu (les ablutions)', en: 'Pillar 2 — Learning the wudu (ablutions)', id: 'Rukun 2 — Belajar wudhu' },
+      { fr: 'Pilier 2 — Les 5 prières de la journée', en: 'Pillar 2 — The 5 daily prayers', id: 'Rukun 2 — 5 sholat sehari' },
+      { fr: 'Pilier 3 — Yusuf donne aux pauvres (Zakat)', en: 'Pillar 3 — Yusuf gives to the poor (Zakat)', id: 'Rukun 3 — Yusuf memberi yang miskin (Zakat)' },
+      { fr: 'Pilier 4 — Le premier Ramadan de Yusuf', en: 'Pillar 4 — Yusuf\'s first Ramadan', id: 'Rukun 4 — Ramadan pertama Yusuf' },
+      { fr: 'Pilier 5 — Le rêve d\'aller à Makkah', en: 'Pillar 5 — Dreaming of going to Makkah', id: 'Rukun 5 — Mimpi pergi ke Makkah' },
+      { fr: 'Adab — As-Salam, saluer son prochain', en: 'Adab — As-Salam, greeting your neighbor', id: 'Adab — As-Salam, menyapa sesama' },
+      { fr: 'Adab — Honorer ses parents', en: 'Adab — Honoring your parents', id: 'Adab — Menghormati orang tua' },
+      { fr: 'Adab — Ne pas gaspiller l\'eau', en: 'Adab — Not wasting water', id: 'Adab — Tidak membuang-buang air' },
+      { fr: 'Adab — Dire toujours la vérité', en: 'Adab — Always telling the truth', id: 'Adab — Selalu berkata jujur' }
+    ]
+  }
+];
+
+// =============================================================
+//   EPISODES DATA
+// =============================================================
+const EPISODES = {
+  bismillah: {
+    title: { fr: 'Hamid et le Bismillah', en: 'Hamid and the Bismillah', id: 'Hamid dan Bismillah' },
+    subtitle: { fr: 'À l\'école islamique, juste avant le goûter', en: 'At the Islamic school, just before snack time', id: 'Di sekolah Islam, sebelum waktu makan' },
+    duration: '3-4 min',
+    age: '5-8',
+    play: 'playBismillah'
+  },
+  bienvenue_laura: {
+    title: { fr: 'Bienvenue Laura', en: 'Welcome Laura', id: 'Selamat datang Laura' },
+    subtitle: { fr: 'Une nouvelle élève arrive à l\'école islamique', en: 'A new student arrives at the Islamic school', id: 'Seorang murid baru datang ke sekolah Islam' },
+    duration: '5-6 min',
+    age: '5-8',
+    play: 'playBienvenueLaura'
+  }
+};
+
+// =============================================================
+//   STATE
+// =============================================================
+const STATE = {
+  language: 'fr',
+  currentScreen: 'title',
+  currentCategory: null
+};
+
+// =============================================================
+//   ASSETS
+// =============================================================
+const ASSETS = {
+  bgPrayerHall: 'assets/backgrounds/salle_priere.jpg',
+  bgOasis: 'assets/backgrounds/oasis.png',
+  bgSalleClasse: 'assets/backgrounds/salle_classe.jpg',
+  hamidNeutre: 'assets/characters/yusuf_neutre.png',
+  hamidJoie: 'assets/characters/yusuf_joie.png',
+  ustazAhmed: 'assets/characters/ustaz_ahmed.png',
+  zamina: 'assets/characters/maman.png',
+  laura: 'assets/characters/laura.png',
+  mamadou: 'assets/characters/mamadou.png',
+  moustique: 'assets/characters/moustique.png',
+  speedLines: 'assets/fx/speed_lines.mp4'
+};
+
+// =============================================================
+//   NAVIGATION
+// =============================================================
+function $(id) { return document.getElementById(id); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function showScreen(name) {
+  $$('.screen').forEach(s => {
+    s.classList.remove('active', 'visible');
+  });
+  const screen = $('screen-' + name);
+  screen.classList.add('active');
+  setTimeout(() => screen.classList.add('visible'), 20);
+  STATE.currentScreen = name;
+}
+
+function t(key, vars = {}) {
+  let str = T[STATE.language][key] || key;
+  Object.keys(vars).forEach(k => {
+    str = str.replace('{' + k + '}', vars[k]);
+  });
+  return str;
+}
+
+function applyTranslations() {
+  $('title-tagline').textContent = t('title_tagline');
+  $('title-cta').textContent = t('title_cta');
+  $('lang-title').textContent = t('lang_title');
+  $('menu-title').textContent = t('menu_title');
+  $('cat-back').textContent = t('back');
+  $('ep-back').textContent = t('back_menu');
+  $('ep-hint').textContent = t('click_to_continue');
+  $('ep-recap-title').textContent = t('recap_title');
+  $('recap-replay').textContent = t('recap_replay');
+  $('recap-menu').textContent = t('recap_menu');
+  // Refresh menu and category if visible (so language switch updates them)
+  if (STATE.currentScreen === 'menu') buildMenu();
+  if (STATE.currentScreen === 'category' && STATE.currentCategory) {
+    openCategory(STATE.currentCategory);
+  }
+}
+
+function buildMenu() {
+  const grid = $('menu-grid');
+  grid.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const card = document.createElement('div');
+    const hasEpisodes = cat.episodes.length > 0;
+    const upcomingCount = (cat.upcoming || []).length;
+    card.className = 'category-card';
+    const statusText = hasEpisodes
+      ? t('available', {n: cat.episodes.length})
+      : t('coming_soon', {n: upcomingCount});
+    card.innerHTML = `
+      <div class="category-icon" style="background: linear-gradient(135deg, ${cat.color}, #d4af37);">${cat.letter}</div>
+      <div class="category-name">${cat.name[STATE.language]}</div>
+      <div class="category-desc">${cat.desc[STATE.language]}</div>
+      <div class="category-status ${hasEpisodes ? '' : 'coming'}">${statusText}</div>
+    `;
+    card.onclick = () => openCategory(cat);
+    grid.appendChild(card);
+  });
+}
+
+function openCategory(cat) {
+  STATE.currentCategory = cat;
+  $('cat-title').textContent = cat.name[STATE.language];
+  const list = $('episode-list');
+  list.innerHTML = '';
+
+  // Always render category description at the top
+  const intro = document.createElement('div');
+  intro.style.cssText = 'background: rgba(70,50,140,0.4); border-left: 4px solid #ffd97a; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px; color: rgba(255,248,224,0.92); font-size: 1.05rem; line-height: 1.6;';
+  intro.textContent = cat.desc[STATE.language];
+  list.appendChild(intro);
+
+  // Render available episodes
+  if (cat.episodes.length > 0) {
+    cat.episodes.forEach((epId, i) => {
+      const ep = EPISODES[epId];
+      if (!ep) return;
+      const card = document.createElement('div');
+      card.className = 'episode-card';
+      card.innerHTML = `
+        <div class="episode-num">${String(i + 1).padStart(2, '0')}</div>
+        <div class="episode-info">
+          <h3>${ep.title[STATE.language]}</h3>
+          <p>${ep.subtitle[STATE.language]} · ${ep.duration} · ${ep.age} ans</p>
+        </div>
+        <div style="color: #ffd97a; font-size: 1.4rem;">▶</div>
+      `;
+      card.onclick = () => playEpisode(epId);
+      list.appendChild(card);
+    });
+  }
+
+  // Render upcoming episodes (locked, but visible to show the scope)
+  const upcoming = cat.upcoming || [];
+  if (upcoming.length > 0) {
+    const header = document.createElement('h2');
+    header.style.cssText = 'color: #ffd97a; font-size: 1.6rem; margin: 30px 0 15px; padding-top: 20px; border-top: 1px solid rgba(212,175,55,0.3);';
+    header.textContent = t('upcoming') + ' (' + upcoming.length + ')';
+    list.appendChild(header);
+
+    upcoming.forEach((up, i) => {
+      const offset = cat.episodes.length;
+      const card = document.createElement('div');
+      card.className = 'episode-card';
+      card.style.cssText = 'opacity: 0.55; cursor: not-allowed; background: linear-gradient(to right, rgba(50,35,90,0.6), rgba(30,15,55,0.7));';
+      card.innerHTML = `
+        <div class="episode-num" style="color: rgba(255,217,122,0.5);">${String(offset + i + 1).padStart(2, '0')}</div>
+        <div class="episode-info">
+          <h3 style="color: rgba(255,255,255,0.85);">${up[STATE.language]}</h3>
+          <p style="color: rgba(255,248,224,0.5);">${t('locked')} · 5-8 ${STATE.language === 'fr' ? 'ans' : (STATE.language === 'en' ? 'years' : 'tahun')}</p>
+        </div>
+        <div style="color: rgba(255,217,122,0.5); font-size: 0.85rem; padding: 8px 14px; border: 1px solid rgba(212,175,55,0.4); border-radius: 6px;">${t('locked')}</div>
+      `;
+      card.onclick = (e) => {
+        e.stopPropagation();
+        // Tiny shake animation to show it's locked
+        card.style.animation = 'none';
+        void card.offsetWidth;
+        card.style.animation = 'shake 0.4s ease';
+      };
+      list.appendChild(card);
+    });
+  }
+
+  showScreen('category');
+}
+
+function playEpisode(epId) {
+  showScreen('episode');
+  setTimeout(() => {
+    const fn = window[EPISODES[epId].play];
+    if (fn) fn();
+  }, 600);
+}
+
+// =============================================================
+//   EPISODE PLAYER ENGINE
+// =============================================================
+const player = {
+  bg: $('ep-bg'),
+  halo: $('ep-halo'),
+  fx: $('ep-fx'),
+  fxVideo: $('ep-fx-video'),
+  yusuf: $('ep-yusuf'),
+  mom: $('ep-mom'),
+  dlg: $('ep-dialogue'),
+  speaker: $('ep-speaker'),
+  text: $('ep-text'),
+  choices: $('ep-choices'),
+  recap: $('ep-recap'),
+  recapList: $('ep-recap-list'),
+  hint: $('ep-hint'),
+  waiting: false,
+  resolveClick: null
+};
+
+function waitForClick() {
+  return new Promise(res => {
+    player.waiting = true;
+    player.resolveClick = res;
+  });
+}
+
+function setBg(src) { player.bg.style.backgroundImage = `url("${src}")`; }
+function showChar(el, position, pose) {
+  if (pose) el.src = pose;
+  el.className = 'character ' + position + ' show';
+}
+function hideChar(el) { el.classList.remove('show'); }
+function setActiveSpeaker(speakingEl) {
+  [player.yusuf, player.mom].forEach(el => {
+    if (!el.classList.contains('show')) return;
+    el.classList.remove('speaking', 'inactive');
+    if (el === speakingEl) el.classList.add('speaking');
+    else el.classList.add('inactive');
+  });
+}
+function clearActiveSpeaker() {
+  [player.yusuf, player.mom].forEach(el => el.classList.remove('speaking', 'inactive'));
+}
+
+async function dialogue(speaker, text, opts = {}) {
+  if (opts.who) setActiveSpeaker(opts.who);
+  player.speaker.textContent = speaker;
+  player.speaker.style.color = opts.color || '#ffd97a';
+  player.text.innerHTML = text;
+  player.dlg.classList.add('show');
+  await waitForClick();
+}
+function hideDialogue() { player.dlg.classList.remove('show'); }
+function showHalo(on) { player.halo.classList.toggle('show', on); }
+
+async function showChoices(choices) {
+  hideDialogue();
+  clearActiveSpeaker();
+  player.hint.style.display = 'none';
+  player.choices.innerHTML = '';
+  return new Promise(res => {
+    choices.forEach((c, i) => {
+      const btn = document.createElement('div');
+      btn.className = 'ep-choice';
+      btn.textContent = String.fromCharCode(65 + i) + ' — ' + c.label;
+      btn.onclick = () => {
+        player.choices.classList.remove('show');
+        player.choices.innerHTML = '';
+        player.hint.style.display = 'block';
+        res(c.value);
+      };
+      player.choices.appendChild(btn);
+    });
+    player.choices.classList.add('show');
+  });
+}
+
+async function playFX(src, durationMs) {
+  player.fxVideo.src = src;
+  player.fxVideo.loop = true;
+  try { await player.fxVideo.play(); } catch(e) {}
+  player.fx.style.opacity = '0.7';
+  await sleep(durationMs);
+  player.fx.style.opacity = '0';
+  await sleep(400);
+  player.fxVideo.pause();
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function showRecap(items) {
+  hideDialogue();
+  player.hint.style.display = 'none';
+  player.recapList.innerHTML = '';
+  items.forEach(it => {
+    const li = document.createElement('li');
+    li.textContent = it;
+    player.recapList.appendChild(li);
+  });
+  player.recap.classList.add('show');
+  await sleep(500);
+  for (const li of player.recapList.children) {
+    li.classList.add('show');
+    await sleep(700);
+  }
+}
+
+// =============================================================
+//   EPISODE: BISMILLAH
+// =============================================================
+const SCRIPTS = {
+  fr: {
+    intro: "C'est l'heure du goûter à l'école islamique. Hamid arrive à la cantine... il a vraiment très faim !",
+    yusuf_hungry: "OUUUF, j'ai trooop faim ! Vite, je vais grignoter ces dattes avant les autres !",
+    mom_slow: "Doucement Hamid ! Avant de manger, tu n'as pas oublié quelque chose de très important ?",
+    yusuf_no: "Heuuu... non Ustaz, j'ai juste faim !",
+    question: "Que doit faire Hamid ?",
+    choice_a: "Manger directement avec sa main droite",
+    choice_b: "Dire « Bismillah » avant de manger",
+    choice_c: "Dire « Alhamdulillah » avant de manger",
+    bismillah_full: "Au nom d'Allah, le Tout-Miséricordieux, le Très-Miséricordieux.",
+    mom_machaallah: "MachaAllah Hamid ! Tu as bien fait. Le Prophète ﷺ nous a enseigné de toujours commencer par le nom d'Allah.",
+    mom_shaytan: "Et tu sais quoi ? Si tu oublies de dire Bismillah au début, le Shaytan mange avec toi... mais si tu le dis, il s'enfuit !",
+    yusuf_promise: "Wow ! Alors je dirai Bismillah à chaque repas inchaAllah ! Je le dirai même aux autres !",
+    mom_wait: "Attends Hamid... Tu as oublié quelque chose de très important !",
+    mom_hadith: "Le Prophète ﷺ a dit à un petit garçon nommé `Umar : « Petit ! Dis Bismillah, mange avec ta main droite, et mange ce qui est près de toi. » (Bukhari & Muslim)",
+    mom_repeat: "Allons, recommence avec moi. Dis : <b>Bismillah</b>.",
+    bismillah_short: "Bismillah — Au nom d'Allah",
+    mom_blessed: "Voilà ! Maintenant tu peux manger, Hamid. Allah te bénira et tes camarades feront pareil.",
+    mom_almost: "Presque Hamid ! <b>Alhamdulillah</b> veut dire « Louange à Allah » — on le dit <u>après</u> avoir mangé pour remercier.",
+    mom_diff: "<b>Avant</b> de manger, on dit <b>Bismillah</b> — au nom d'Allah. Tu vois la différence ?",
+    yusuf_understood: "Aaaah d'accord ! Pardonne-moi Ustaz... Alors : Bismillah !",
+    mom_excellent: "Excellent Hamid ! Tu as bien compris. Allah aime ceux qui apprennent et qui se corrigent.",
+    recap1: "✓ Je dis Bismillah avant de manger",
+    recap2: "✓ Je mange avec ma main droite",
+    recap3: "✓ Si j'oublie, je dis : « Bismillāhi awwalahu wa ākhirahu »"
+  },
+  en: {
+    intro: "It's snack time at the Islamic school. Hamid arrives at the cafeteria... he's really very hungry!",
+    yusuf_hungry: "PHEEEW, I'm sooo hungry! Quick, I'll grab those dates before the others!",
+    mom_slow: "Slow down Hamid! Before you eat, aren't you forgetting something very important?",
+    yusuf_no: "Uhhh... no Ustaz, I'm just hungry!",
+    question: "What should Hamid do?",
+    choice_a: "Eat right away with his right hand",
+    choice_b: "Say \"Bismillah\" before eating",
+    choice_c: "Say \"Alhamdulillah\" before eating",
+    bismillah_full: "In the name of Allah, the Most Merciful, the Most Compassionate.",
+    mom_machaallah: "MashaAllah Hamid! Well done. The Prophet ﷺ taught us to always begin with the name of Allah.",
+    mom_shaytan: "And you know what? If you forget to say Bismillah at the start, Shaytan eats with you... but if you say it, he runs away!",
+    yusuf_promise: "Wooow! Then I'll say Bismillah at every meal inshaAllah! I'll even tell the others!",
+    mom_wait: "Wait Hamid... You forgot something very important!",
+    mom_hadith: "The Prophet ﷺ once said to a little boy named `Umar: \"Young one! Say Bismillah, eat with your right hand, and eat from what is near you.\" (Bukhari & Muslim)",
+    mom_repeat: "Come on, try again with me. Say: <b>Bismillah</b>.",
+    bismillah_short: "Bismillah — In the name of Allah",
+    mom_blessed: "There you go! Now you can eat, Hamid. Allah will bless you and your classmates will do the same.",
+    mom_almost: "Almost Hamid! <b>Alhamdulillah</b> means \"All praise belongs to Allah\" — we say it <u>after</u> eating to thank Him.",
+    mom_diff: "<b>Before</b> eating, we say <b>Bismillah</b> — in the name of Allah. Do you see the difference?",
+    yusuf_understood: "Ohhh I see! Forgive me Ustaz... Then: Bismillah!",
+    mom_excellent: "Excellent Hamid! You understood well. Allah loves those who learn and correct themselves.",
+    recap1: "✓ I say Bismillah before eating",
+    recap2: "✓ I eat with my right hand",
+    recap3: "✓ If I forget, I say: \"Bismillāhi awwalahu wa ākhirahu\""
+  },
+  id: {
+    intro: "Saatnya makan camilan di sekolah Islam. Hamid sampai di kantin... dia benar-benar sangat lapar!",
+    yusuf_hungry: "WAAH, aku lapar sekali! Cepat, aku akan ambil kurma itu sebelum yang lain!",
+    mom_slow: "Pelan-pelan Hamid! Sebelum makan, kamu tidak lupa sesuatu yang sangat penting?",
+    yusuf_no: "Ehh... tidak Ustaz, aku cuma lapar!",
+    question: "Apa yang harus Hamid lakukan?",
+    choice_a: "Langsung makan dengan tangan kanannya",
+    choice_b: "Mengucapkan \"Bismillah\" sebelum makan",
+    choice_c: "Mengucapkan \"Alhamdulillah\" sebelum makan",
+    bismillah_full: "Dengan nama Allah, Yang Maha Pengasih, Yang Maha Penyayang.",
+    mom_machaallah: "MasyaAllah Hamid! Bagus sekali. Nabi ﷺ mengajarkan kita untuk selalu memulai dengan nama Allah.",
+    mom_shaytan: "Dan kamu tahu? Kalau kamu lupa mengucap Bismillah di awal, Setan ikut makan denganmu... tapi kalau kamu mengucapkannya, dia kabur!",
+    yusuf_promise: "Wah! Kalau begitu aku akan mengucap Bismillah setiap makan insyaAllah! Aku akan memberi tahu yang lain juga!",
+    mom_wait: "Tunggu Hamid... Kamu lupa sesuatu yang sangat penting!",
+    mom_hadith: "Nabi ﷺ pernah berkata kepada anak kecil bernama `Umar: \"Wahai anak! Ucapkan Bismillah, makanlah dengan tangan kananmu, dan makanlah dari yang dekat denganmu.\" (Bukhari & Muslim)",
+    mom_repeat: "Ayo, coba ulangi denganku. Ucapkan: <b>Bismillah</b>.",
+    bismillah_short: "Bismillah — Dengan nama Allah",
+    mom_blessed: "Nah! Sekarang kamu boleh makan, Hamid. Allah akan memberkahimu dan teman-temanmu akan ikut.",
+    mom_almost: "Hampir benar Hamid! <b>Alhamdulillah</b> berarti \"Segala puji bagi Allah\" — kita ucapkan <u>setelah</u> makan untuk berterima kasih.",
+    mom_diff: "<b>Sebelum</b> makan, kita ucapkan <b>Bismillah</b> — dengan nama Allah. Lihat perbedaannya?",
+    yusuf_understood: "Oooh begitu! Maafkan aku Ustaz... Jadi: Bismillah!",
+    mom_excellent: "Bagus sekali Hamid! Kamu sudah mengerti. Allah mencintai mereka yang belajar dan memperbaiki diri.",
+    recap1: "✓ Aku mengucap Bismillah sebelum makan",
+    recap2: "✓ Aku makan dengan tangan kanan",
+    recap3: "✓ Kalau aku lupa, aku ucapkan: \"Bismillāhi awwalahu wa ākhirahu\""
+  }
+};
+
+const SCRIPTS_LAURA = {
+  fr: {
+    intro: "Devant l'école islamique. Une petite fille aux cheveux bouclés est assise toute seule. Zamina la remarque et s'approche...",
+    zamina_meet: "As-Salamu `Alaykum ! Tu es nouvelle ? Comment t'appelles-tu ?",
+    laura_intro: "Je m'appelle Laura. Je n'ai pas de parents... je vis seule.",
+    zamina_subhanallah: "SubhanAllah... mais ne sois pas triste, Allah s'occupe de toi !",
+    laura_dontknow: "Ai-je dit quelque chose de mal ? Je ne sais pas qui est Allah.",
+    zamina_panic: "Quoi ?! Tu ne connais pas Allah ?! Vivre sans connaître Allah, c'est comme marcher dans le noir !",
+    zamina_rush: "Ne bouge pas, je vais chercher Ustaz tout de suite !",
+    transition: "Zamina court dans les couloirs malgré la règle... Elle arrive en classe.",
+    classroom_intro: "Dans la salle de classe. Hamid fait semblant de dormir sur son bureau. Ustaz Ahmed est devant le tableau.",
+    ustaz_calls: "Zamina ! Tu sais que c'est interdit de courir dans les couloirs. Que se passe-t-il ?",
+    zamina_explains: "Pardon Ustaz ! C'est pour Laura ! Elle ne connaît pas Allah et elle n'a pas de parents !",
+    ustaz_thinks: "Oh là là, c'est très sérieux. Allons l'accueillir comme il se doit.",
+    laura_enters: "Laura entre timidement dans la classe. Tous les élèves la regardent.",
+    ustaz_welcome: "Bienvenue Laura ! Ce n'est pas un problème si tu ne connais pas Allah. Dans cette école, nous allons tout t'apprendre.",
+    question: "Que faites-vous, vous l'ami(e) de Hamid ?",
+    choice_a: "Lever la main et dire : « Je veux être l'ami(e) de Laura ! »",
+    choice_b: "Rester silencieux(se), c'est gênant",
+    choice_c: "Demander à Ustaz pourquoi Laura ne connaît pas Allah",
+    branch_a_zamina: "MachaAllah ! Moi aussi je veux être son amie ! Je serai là pour toi, Laura !",
+    branch_a_ustaz: "Quel enthousiasme ! C'est ça, être musulman : faire le bien pour Allah, accueillir ceux qui sont seuls.",
+    branch_a_laura: "Wow... vous êtes tous gentils. Merci...",
+    branch_b_ustaz: "Pas de soucis si tu es timide. Mais souviens-toi : Allah aime ceux qui aident les autres. Le Prophète ﷺ a dit : « Aucun de vous ne sera vraiment croyant tant qu'il n'aimera pas pour son frère ce qu'il aime pour lui-même. » (Bukhari)",
+    branch_b_secondchance: "Tu peux toujours essayer maintenant. Que dis-tu à Laura ?",
+    branch_b_yes: "Bienvenue Laura ! Je serai ton ami(e) aussi !",
+    branch_c_ustaz: "Bonne question ! Allah a créé tous les humains, mais certains n'ont pas eu la chance d'apprendre encore. C'est pour cela qu'on apprend ensemble, et qu'on partage la lumière de l'islam.",
+    branch_c_lesson: "Allah dit dans le Coran : « Et nous t'avons envoyé qu'en miséricorde pour les mondes. » (21:107) Le Prophète ﷺ est venu pour TOUT le monde, même Laura.",
+    teaching_intro: "Bien, maintenant que tout le monde se connaît, je vais commencer notre première leçon...",
+    teaching_shahada: "Le tout premier pilier de l'islam, c'est la SHAHADA : croire qu'il n'y a pas d'autre divinité qu'Allah, et que Muhammad ﷺ est Son messager.",
+    teaching_phrase: "On le dit ainsi : « Ach-hadu an lā ilāha illā Allāh, wa ach-hadu anna Muhammadan rasūlullāh ». Cela veut dire : « J'atteste qu'il n'y a de divinité qu'Allah, et que Muhammad est Son messager. »",
+    teaching_simple: "C'est la phrase la plus importante de toute notre vie ! Quand tu la dis sincèrement, tu deviens musulman(e).",
+    laura_question: "Ustaz... est-ce que je peux apprendre cette phrase moi aussi ?",
+    ustaz_yes: "Bien sûr Laura ! Mais prends ton temps, comprends d'abord. Allah voit ton coeur et Il est patient.",
+    recap1: "✓ J'accueille toujours les nouveaux avec As-Salamu `Alaykum",
+    recap2: "✓ La Shahada est le 1er pilier de l'islam : Allah est Unique, Muhammad ﷺ est Son messager",
+    recap3: "✓ Aider les autres pour Allah, c'est ça être musulman"
+  },
+  en: {
+    intro: "In front of the Islamic school. A little girl with curly hair sits alone. Zamina notices her and approaches...",
+    zamina_meet: "As-Salamu `Alaykum! Are you new? What's your name?",
+    laura_intro: "My name is Laura. I have no parents... I live alone.",
+    zamina_subhanallah: "SubhanAllah... but don't be sad, Allah takes care of you!",
+    laura_dontknow: "Did I say something wrong? I don't know who Allah is.",
+    zamina_panic: "What?! You don't know Allah?! Living without knowing Allah is like walking in the dark!",
+    zamina_rush: "Don't move, I'll go find Ustaz right now!",
+    transition: "Zamina runs through the corridors despite the rule... She arrives in class.",
+    classroom_intro: "In the classroom. Hamid pretends to sleep on his desk. Ustaz Ahmed is in front of the board.",
+    ustaz_calls: "Zamina! You know it's forbidden to run in the corridors. What's happening?",
+    zamina_explains: "Sorry Ustaz! It's for Laura! She doesn't know Allah and has no parents!",
+    ustaz_thinks: "Oh dear, this is very serious. Let's go welcome her properly.",
+    laura_enters: "Laura enters the classroom shyly. All the students look at her.",
+    ustaz_welcome: "Welcome Laura! It's no problem if you don't know Allah. In this school, we'll teach you everything.",
+    question: "What do you do, friend of Hamid?",
+    choice_a: "Raise your hand and say: \"I want to be Laura's friend!\"",
+    choice_b: "Stay silent, it's awkward",
+    choice_c: "Ask Ustaz why Laura doesn't know Allah",
+    branch_a_zamina: "MashaAllah! I also want to be her friend! I'll be there for you, Laura!",
+    branch_a_ustaz: "What enthusiasm! That's what being Muslim is: doing good for Allah, welcoming those who are alone.",
+    branch_a_laura: "Wow... you're all so kind. Thank you...",
+    branch_b_ustaz: "It's okay if you're shy. But remember: Allah loves those who help others. The Prophet ﷺ said: \"None of you truly believes until he loves for his brother what he loves for himself.\" (Bukhari)",
+    branch_b_secondchance: "You can still try now. What do you say to Laura?",
+    branch_b_yes: "Welcome Laura! I'll be your friend too!",
+    branch_c_ustaz: "Good question! Allah created all humans, but some haven't had the chance to learn yet. That's why we learn together, and share the light of Islam.",
+    branch_c_lesson: "Allah says in the Quran: \"And We have not sent you except as a mercy to the worlds.\" (21:107) The Prophet ﷺ came for EVERYONE, even Laura.",
+    teaching_intro: "Good, now that everyone knows each other, I'll begin our first lesson...",
+    teaching_shahada: "The very first pillar of Islam is the SHAHADA: believing there is no deity but Allah, and that Muhammad ﷺ is His messenger.",
+    teaching_phrase: "We say it this way: \"Ash-hadu an lā ilāha illā Allāh, wa ash-hadu anna Muhammadan rasūlullāh.\" That means: \"I bear witness that there is no deity but Allah, and that Muhammad is His messenger.\"",
+    teaching_simple: "It's the most important sentence of our whole life! When you say it sincerely, you become Muslim.",
+    laura_question: "Ustaz... can I learn this sentence too?",
+    ustaz_yes: "Of course Laura! But take your time, understand first. Allah sees your heart and He is patient.",
+    recap1: "✓ I always welcome newcomers with As-Salamu `Alaykum",
+    recap2: "✓ The Shahada is the 1st pillar of Islam: Allah is One, Muhammad ﷺ is His messenger",
+    recap3: "✓ Helping others for Allah's sake is what being Muslim is about"
+  },
+  id: {
+    intro: "Di depan sekolah Islam. Seorang gadis kecil berambut keriting duduk sendirian. Zamina memperhatikannya dan mendekat...",
+    zamina_meet: "As-Salamu `Alaykum! Kamu baru di sini? Siapa namamu?",
+    laura_intro: "Namaku Laura. Aku tidak punya orang tua... aku hidup sendiri.",
+    zamina_subhanallah: "SubhanAllah... tapi jangan sedih, Allah menjagamu!",
+    laura_dontknow: "Apa aku mengatakan sesuatu yang salah? Aku tidak tahu siapa Allah.",
+    zamina_panic: "Apa?! Kamu tidak kenal Allah?! Hidup tanpa mengenal Allah seperti berjalan dalam gelap!",
+    zamina_rush: "Jangan bergerak, aku akan segera mencari Ustaz!",
+    transition: "Zamina berlari melalui koridor meski itu dilarang... Dia tiba di kelas.",
+    classroom_intro: "Di dalam kelas. Hamid berpura-pura tidur di mejanya. Ustaz Ahmed berdiri di depan papan tulis.",
+    ustaz_calls: "Zamina! Kamu tahu dilarang berlari di koridor. Apa yang terjadi?",
+    zamina_explains: "Maaf Ustaz! Ini untuk Laura! Dia tidak kenal Allah dan tidak punya orang tua!",
+    ustaz_thinks: "Astaghfirullah, ini sangat serius. Mari kita sambut dia dengan layak.",
+    laura_enters: "Laura memasuki kelas dengan malu-malu. Semua murid menatapnya.",
+    ustaz_welcome: "Selamat datang Laura! Tidak apa-apa kalau kamu belum kenal Allah. Di sekolah ini, kami akan mengajarimu semuanya.",
+    question: "Apa yang kamu lakukan, sebagai teman Hamid?",
+    choice_a: "Angkat tangan dan berkata: \"Aku ingin jadi teman Laura!\"",
+    choice_b: "Tetap diam, ini canggung",
+    choice_c: "Bertanya kepada Ustaz mengapa Laura tidak kenal Allah",
+    branch_a_zamina: "MasyaAllah! Aku juga mau jadi temannya! Aku akan ada untukmu, Laura!",
+    branch_a_ustaz: "Sungguh antusiasme! Itulah arti menjadi Muslim: berbuat baik untuk Allah, menyambut yang sendirian.",
+    branch_a_laura: "Wah... kalian semua baik sekali. Terima kasih...",
+    branch_b_ustaz: "Tidak apa-apa kalau kamu malu. Tapi ingat: Allah mencintai mereka yang menolong sesama. Nabi ﷺ bersabda: \"Tidak sempurna iman seseorang sampai dia mencintai untuk saudaranya apa yang dicintai untuk dirinya.\" (Bukhari)",
+    branch_b_secondchance: "Kamu masih bisa mencoba sekarang. Apa yang kamu katakan kepada Laura?",
+    branch_b_yes: "Selamat datang Laura! Aku juga akan jadi temanmu!",
+    branch_c_ustaz: "Pertanyaan bagus! Allah menciptakan semua manusia, tapi sebagian belum berkesempatan belajar. Karena itulah kita belajar bersama, dan berbagi cahaya Islam.",
+    branch_c_lesson: "Allah berfirman dalam Al-Quran: \"Dan tiadalah Kami mengutus engkau, melainkan sebagai rahmat bagi semesta alam.\" (21:107) Nabi ﷺ datang untuk SEMUA orang, termasuk Laura.",
+    teaching_intro: "Baik, sekarang setelah semuanya saling kenal, aku akan memulai pelajaran pertama kita...",
+    teaching_shahada: "Rukun Islam yang pertama adalah SYAHADAT: percaya bahwa tidak ada Tuhan selain Allah, dan Muhammad ﷺ adalah utusan-Nya.",
+    teaching_phrase: "Kita ucapkan begini: \"Asyhadu an lā ilāha illā Allāh, wa asyhadu anna Muhammadan rasūlullāh.\" Artinya: \"Aku bersaksi bahwa tiada Tuhan selain Allah, dan Muhammad adalah utusan-Nya.\"",
+    teaching_simple: "Inilah kalimat paling penting dalam hidup kita! Kalau kamu mengucapkannya dengan tulus, kamu menjadi Muslim.",
+    laura_question: "Ustaz... bolehkah aku juga belajar kalimat ini?",
+    ustaz_yes: "Tentu Laura! Tapi pelan-pelan, pahami dulu. Allah melihat hatimu dan Dia Maha Sabar.",
+    recap1: "✓ Aku selalu menyambut orang baru dengan As-Salamu `Alaykum",
+    recap2: "✓ Syahadat adalah rukun pertama Islam: Allah Esa, Muhammad ﷺ adalah utusan-Nya",
+    recap3: "✓ Menolong sesama karena Allah adalah arti menjadi Muslim"
+  }
+};
+
+async function playBismillah() {
+  // Reset
+  player.recap.classList.remove('show');
+  hideChar(player.yusuf); hideChar(player.mom);
+  hideDialogue();
+  player.hint.style.display = 'block';
+
+  const s = SCRIPTS[STATE.language];
+
+  setBg(ASSETS.bgSalleClasse);
+  await sleep(400);
+
+  // Intro narrative
+  await dialogue('', s.intro, {color: '#ffd97a'});
+
+  // Yusuf bursts in
+  await playFX(ASSETS.speedLines, 1500);
+  showChar(player.yusuf, 'right', ASSETS.hamidJoie);
+  player.yusuf.classList.add('bounce');
+  await dialogue('Hamid', s.yusuf_hungry, {color: '#ffb347', who: player.yusuf});
+
+  // Mom appears
+  player.yusuf.classList.remove('bounce');
+  showChar(player.yusuf, 'right', ASSETS.hamidNeutre);
+  showChar(player.mom, 'left');
+  await sleep(400);
+  await dialogue('Ustaz Ahmed', s.mom_slow, {color: '#ffd97a', who: player.mom});
+  await dialogue('Hamid', s.yusuf_no, {color: '#ffb347', who: player.yusuf});
+
+  // Choice
+  hideDialogue();
+  clearActiveSpeaker();
+  await sleep(300);
+  player.speaker.textContent = '';
+  player.text.innerHTML = `<div style="text-align:center; color:#ffd97a; font-size:1.5rem; font-weight:bold;">${s.question}</div>`;
+  player.dlg.classList.add('show');
+  await sleep(600);
+
+  const choice = await showChoices([
+    { label: s.choice_a, value: 'A' },
+    { label: s.choice_b, value: 'B' },
+    { label: s.choice_c, value: 'C' }
+  ]);
+  hideDialogue();
+  await sleep(300);
+
+  if (choice === 'B') {
+    showHalo(true);
+    showChar(player.yusuf, 'right', ASSETS.hamidJoie);
+    await dialogue('Hamid',
+      `<div class="arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+       <div class="translit">Bismi-llāhi r-raḥmāni r-raḥīm</div>
+       <div style="text-align:center; margin-top:8px;">${s.bismillah_full}</div>`,
+      {color: '#ffb347', who: player.yusuf});
+    showHalo(false);
+    showChar(player.yusuf, 'right', ASSETS.hamidNeutre);
+    await dialogue('Ustaz Ahmed', s.mom_machaallah, {color: '#ffd97a', who: player.mom});
+    await dialogue('Ustaz Ahmed', s.mom_shaytan, {color: '#ffd97a', who: player.mom});
+    showChar(player.yusuf, 'right', ASSETS.hamidJoie);
+    player.yusuf.classList.add('bounce');
+    await dialogue('Hamid', s.yusuf_promise, {color: '#ffb347', who: player.yusuf});
+    player.yusuf.classList.remove('bounce');
+  } else if (choice === 'A') {
+    await dialogue('Ustaz Ahmed', s.mom_wait, {color: '#ffd97a', who: player.mom});
+    await dialogue('Ustaz Ahmed', s.mom_hadith, {color: '#ffd97a', who: player.mom});
+    await dialogue('Ustaz Ahmed', s.mom_repeat, {color: '#ffd97a', who: player.mom});
+    showHalo(true);
+    showChar(player.yusuf, 'right', ASSETS.hamidJoie);
+    await dialogue('Hamid',
+      `<div class="arabic">بِسْمِ اللَّهِ</div>
+       <div class="translit">${s.bismillah_short}</div>`,
+      {color: '#ffb347', who: player.yusuf});
+    showHalo(false);
+    await dialogue('Ustaz Ahmed', s.mom_blessed, {color: '#ffd97a', who: player.mom});
+  } else {
+    await dialogue('Ustaz Ahmed', s.mom_almost, {color: '#ffd97a', who: player.mom});
+    await dialogue('Ustaz Ahmed', s.mom_diff, {color: '#ffd97a', who: player.mom});
+    await dialogue('Hamid', s.yusuf_understood, {color: '#ffb347', who: player.yusuf});
+    showHalo(true);
+    showChar(player.yusuf, 'right', ASSETS.hamidJoie);
+    await dialogue('Hamid',
+      `<div class="arabic">بِسْمِ اللَّهِ</div>
+       <div class="translit">${s.bismillah_short}</div>`,
+      {color: '#ffb347', who: player.yusuf});
+    showHalo(false);
+    await dialogue('Ustaz Ahmed', s.mom_excellent, {color: '#ffd97a', who: player.mom});
+  }
+
+  hideDialogue();
+  clearActiveSpeaker();
+  hideChar(player.yusuf); hideChar(player.mom);
+  await sleep(500);
+
+  await showRecap([s.recap1, s.recap2, s.recap3]);
+}
+
+// =============================================================
+//   EPISODE: BIENVENUE LAURA
+// =============================================================
+async function playBienvenueLaura() {
+  // Reset
+  player.recap.classList.remove('show');
+  hideChar(player.yusuf); hideChar(player.mom);
+  hideDialogue();
+  player.hint.style.display = 'block';
+  player.mom.classList.remove('flip-x');
+
+  const s = SCRIPTS_LAURA[STATE.language];
+
+  // === ACT 1: Outdoor courtyard ===
+  setBg(ASSETS.bgOasis);
+  await sleep(500);
+
+  await dialogue('', s.intro, {color: '#ffd97a'});
+
+  // Zamina (left) approaches Laura (right)
+  player.mom.src = ASSETS.zamina;
+  showChar(player.mom, 'left');
+  await sleep(300);
+  player.yusuf.src = ASSETS.laura;
+  showChar(player.yusuf, 'right');
+  await sleep(300);
+
+  await dialogue('Zamina', s.zamina_meet, {color: '#ff9ec7', who: player.mom});
+  await dialogue('Laura', s.laura_intro, {color: '#c9a0ff', who: player.yusuf});
+  await dialogue('Zamina', s.zamina_subhanallah, {color: '#ff9ec7', who: player.mom});
+  await dialogue('Laura', s.laura_dontknow, {color: '#c9a0ff', who: player.yusuf});
+  await dialogue('Zamina', s.zamina_panic, {color: '#ff9ec7', who: player.mom});
+
+  // Speed lines as Zamina rushes
+  await playFX(ASSETS.speedLines, 1500);
+  player.mom.classList.add('bounce');
+  await dialogue('Zamina', s.zamina_rush, {color: '#ff9ec7', who: player.mom});
+  player.mom.classList.remove('bounce');
+
+  // === TRANSITION: black fade to classroom ===
+  hideDialogue();
+  hideChar(player.mom);
+  hideChar(player.yusuf);
+  await sleep(400);
+  setBg('');
+  document.getElementById('ep-bg').style.background = '#000';
+  await sleep(800);
+  await dialogue('', s.transition, {color: '#ffd97a'});
+
+  // === ACT 2: Classroom ===
+  setBg(ASSETS.bgSalleClasse);
+  document.getElementById('ep-bg').style.background = '';
+  await sleep(500);
+
+  // Hamid (right) appears first - pretending to sleep
+  player.yusuf.src = ASSETS.hamidNeutre;
+  showChar(player.yusuf, 'right');
+  await sleep(300);
+  await dialogue('', s.classroom_intro, {color: '#ffd97a'});
+
+  // Ustaz (left, flipped) appears
+  player.mom.src = ASSETS.ustazAhmed;
+  player.mom.classList.add('flip-x');
+  showChar(player.mom, 'left');
+  await sleep(300);
+
+  // Zamina arrives (we swap Hamid out, Zamina in)
+  player.yusuf.src = ASSETS.zamina;
+  await sleep(200);
+
+  await dialogue('Ustaz Ahmed', s.ustaz_calls, {color: '#ffd97a', who: player.mom});
+  await dialogue('Zamina', s.zamina_explains, {color: '#ff9ec7', who: player.yusuf});
+  await dialogue('Ustaz Ahmed', s.ustaz_thinks, {color: '#ffd97a', who: player.mom});
+
+  // Laura enters
+  await dialogue('', s.laura_enters, {color: '#ffd97a'});
+  player.yusuf.src = ASSETS.laura;
+  await sleep(300);
+
+  await dialogue('Ustaz Ahmed', s.ustaz_welcome, {color: '#ffd97a', who: player.mom});
+
+  // === CHOICE ===
+  hideDialogue();
+  clearActiveSpeaker();
+  await sleep(300);
+  player.speaker.textContent = '';
+  player.text.innerHTML = `<div style="text-align:center; color:#ffd97a; font-size:1.5rem; font-weight:bold;">${s.question}</div>`;
+  player.dlg.classList.add('show');
+  await sleep(600);
+
+  const choice = await showChoices([
+    { label: s.choice_a, value: 'A' },
+    { label: s.choice_b, value: 'B' },
+    { label: s.choice_c, value: 'C' }
+  ]);
+  hideDialogue();
+  await sleep(300);
+
+  if (choice === 'A') {
+    showHalo(true);
+    // Switch slot to show Zamina
+    player.yusuf.src = ASSETS.zamina;
+    await dialogue('Zamina', s.branch_a_zamina, {color: '#ff9ec7', who: player.yusuf});
+    showHalo(false);
+    await dialogue('Ustaz Ahmed', s.branch_a_ustaz, {color: '#ffd97a', who: player.mom});
+    // Show Laura grateful
+    player.yusuf.src = ASSETS.laura;
+    await dialogue('Laura', s.branch_a_laura, {color: '#c9a0ff', who: player.yusuf});
+  } else if (choice === 'B') {
+    await dialogue('Ustaz Ahmed', s.branch_b_ustaz, {color: '#ffd97a', who: player.mom});
+    await dialogue('Ustaz Ahmed', s.branch_b_secondchance, {color: '#ffd97a', who: player.mom});
+    showHalo(true);
+    // Show player as Hamid speaking
+    player.yusuf.src = ASSETS.hamidJoie;
+    await dialogue('Hamid', s.branch_b_yes, {color: '#ffb347', who: player.yusuf});
+    showHalo(false);
+    player.yusuf.src = ASSETS.laura;
+  } else {
+    await dialogue('Ustaz Ahmed', s.branch_c_ustaz, {color: '#ffd97a', who: player.mom});
+    await dialogue('Ustaz Ahmed', s.branch_c_lesson, {color: '#ffd97a', who: player.mom});
+  }
+
+  // === ACT 3: Teaching the Shahada ===
+  await dialogue('Ustaz Ahmed', s.teaching_intro, {color: '#ffd97a', who: player.mom});
+  await dialogue('Ustaz Ahmed', s.teaching_shahada, {color: '#ffd97a', who: player.mom});
+
+  showHalo(true);
+  await dialogue('Ustaz Ahmed',
+    `<div class="arabic">أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللهُ ، وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللهِ</div>
+     <div class="translit">Ash-hadu an lā ilāha illā Allāh, wa ash-hadu anna Muhammadan rasūlullāh</div>
+     <div style="text-align:center; margin-top:8px;">${s.teaching_phrase}</div>`,
+    {color: '#ffd97a', who: player.mom});
+  showHalo(false);
+
+  await dialogue('Ustaz Ahmed', s.teaching_simple, {color: '#ffd97a', who: player.mom});
+
+  // Laura asks
+  await dialogue('Laura', s.laura_question, {color: '#c9a0ff', who: player.yusuf});
+  await dialogue('Ustaz Ahmed', s.ustaz_yes, {color: '#ffd97a', who: player.mom});
+
+  // === RECAP ===
+  hideDialogue();
+  clearActiveSpeaker();
+  hideChar(player.yusuf); hideChar(player.mom);
+  player.mom.classList.remove('flip-x');
+  await sleep(500);
+
+  await showRecap([s.recap1, s.recap2, s.recap3]);
+}
+
+// =============================================================
+//   EVENT HANDLERS
+// =============================================================
+$('screen-title').addEventListener('click', () => {
+  showScreen('lang');
+});
+
+$$('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    STATE.language = btn.dataset.lang;
+    applyTranslations();
+    buildMenu();
+    showScreen('menu');
+  });
+});
+
+$('lang-switch').addEventListener('click', () => {
+  showScreen('lang');
+});
+
+$('cat-back').addEventListener('click', () => {
+  showScreen('menu');
+});
+
+$('ep-back').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (STATE.currentCategory) {
+    openCategory(STATE.currentCategory);
+  } else {
+    showScreen('menu');
+  }
+});
+
+$('recap-replay').addEventListener('click', (e) => {
+  e.stopPropagation();
+  player.recap.classList.remove('show');
+  Array.from(player.recapList.children).forEach(li => li.classList.remove('show'));
+  setTimeout(() => playBismillah(), 400);
+});
+
+$('recap-menu').addEventListener('click', (e) => {
+  e.stopPropagation();
+  player.recap.classList.remove('show');
+  Array.from(player.recapList.children).forEach(li => li.classList.remove('show'));
+  if (STATE.currentCategory) {
+    openCategory(STATE.currentCategory);
+  } else {
+    showScreen('menu');
+  }
+});
+
+$('stage').addEventListener('click', () => {
+  if (STATE.currentScreen !== 'episode') return;
+  if (player.waiting && player.resolveClick) {
+    player.waiting = false;
+    const r = player.resolveClick;
+    player.resolveClick = null;
+    r();
+  }
+});
+
+// =============================================================
+//   INIT
+// =============================================================
+window.addEventListener('load', () => {
+  applyTranslations();
+  buildMenu();
+  showScreen('title');
+});
+</script>
+</body>
+</html>
