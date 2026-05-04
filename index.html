@@ -6,22 +6,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#1a0e2e">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bowlby+One&family=Comic+Neue:wght@400;700&family=Cairo:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  /* ===== PALETTE OFFICIELLE (Charte graphique Animuslim) =====
+     Noir #000000, Vert #00FF00, Bleu ciel #0895E6
+     Polices : Bangers/Bowlby (titres), Comic Neue (corps), Cairo/Amiri (arabe) */
+  :root {
+    --c-black: #000000;
+    --c-green: #00FF00;
+    --c-green-dark: #00b800;
+    --c-blue: #0895E6;
+    --c-blue-dark: #0670b0;
+    --c-white: #ffffff;
+    --c-bg-deep: #001a05;
+    --c-bg-mid: #021f15;
+    --font-title: 'Bangers', 'Bowlby One', 'Comic Sans MS', sans-serif;
+    --font-body: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
+    --font-arabic: 'Cairo', 'Amiri', 'Times New Roman', serif;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box;
-    /* Prévenir le débordement de texte sur tous les éléments */
     word-break: break-word;
     overflow-wrap: anywhere;
   }
   html, body {
     width: 100%; height: 100%;
     max-width: 100vw;
-    background: #1a0e2e;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    overflow-x: hidden;  /* CRITIQUE : empêche tout débordement horizontal */
+    background: var(--c-black);
+    font-family: var(--font-body);
+    overflow-x: hidden;
     overflow-y: hidden;
     user-select: none;
-    color: #fff;
+    color: var(--c-white);
   }
   #app {
     max-width: 100vw;
@@ -72,7 +91,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: url('assets/backgrounds/oasis.png') center/cover, #1a0e2e;
+    background: url('assets/backgrounds/oasis.png') center/cover, var(--c-black);
     cursor: pointer;
     overflow-y: auto !important;
     padding: 30px 15px;
@@ -80,23 +99,37 @@
   #screen-title::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(15,8,30,0.85) 100%);
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.92) 100%);
   }
   .title-content {
     position: relative;
     text-align: center;
     z-index: 2;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 15px;
+  }
+  .title-logo {
+    width: clamp(180px, 55vw, 480px);
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 18px;
+    filter: drop-shadow(0 0 30px rgba(0,255,0,0.5)) drop-shadow(0 4px 20px rgba(0,0,0,0.8));
+    animation: float 4s ease-in-out infinite;
   }
   .title-main {
     font-size: clamp(1.8rem, 12vw, 8rem);
     font-weight: 900;
-    color: #ffd97a;
+    color: var(--c-green);
     letter-spacing: clamp(1px, 0.5vw, 8px);
-    text-shadow: 0 6px 30px rgba(0,0,0,0.9), 0 0 50px rgba(255,200,80,0.5);
+    text-shadow: 0 6px 30px rgba(0,0,0,0.9), 0 0 50px rgba(0,255,0,0.5);
     margin-bottom: 10px;
+    font-family: var(--font-title);
     animation: float 4s ease-in-out infinite;
     max-width: 100%;
     word-break: break-word;
+    display: none;  /* On utilise le logo image à la place */
   }
   @keyframes float {
     0%, 100% { transform: translateY(0); }
@@ -104,36 +137,41 @@
   }
   .title-sub {
     font-size: clamp(0.85rem, 3vw, 1.8rem);
-    color: #fff8e0;
+    color: var(--c-white);
     letter-spacing: clamp(0.5px, 0.3vw, 3px);
-    margin-bottom: clamp(30px, 8vw, 80px);
+    margin-bottom: clamp(30px, 8vw, 60px);
     opacity: 0.92;
     max-width: 100%;
     text-align: center;
     padding: 0 10px;
     word-break: break-word;
+    font-family: var(--font-body);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
   }
   .title-bismillah {
     font-size: clamp(1.1rem, 5vw, 3rem);
-    color: #ffd97a;
+    color: var(--c-green);
     direction: rtl;
-    margin-bottom: clamp(20px, 6vw, 60px);
-    text-shadow: 0 0 25px rgba(255,200,80,0.6);
-    font-family: 'Times New Roman', serif;
+    margin-bottom: clamp(20px, 6vw, 35px);
+    text-shadow: 0 0 25px rgba(0,255,0,0.5), 0 2px 10px rgba(0,0,0,0.9);
+    font-family: var(--font-arabic);
     max-width: 100%;
     padding: 0 10px;
     word-break: keep-all;
     overflow-wrap: break-word;
     line-height: 1.5;
+    font-weight: 700;
   }
   .title-cta {
     font-size: clamp(0.75rem, 2.5vw, 1.3rem);
-    color: rgba(255,255,255,0.85);
+    color: var(--c-blue);
     margin-top: clamp(15px, 4vw, 30px);
     animation: pulse 2s ease-in-out infinite;
     max-width: 100%;
     padding: 0 15px;
     text-align: center;
+    font-weight: 700;
+    text-shadow: 0 0 12px rgba(8,149,230,0.6), 0 2px 8px rgba(0,0,0,0.9);
   }
   @keyframes pulse {
     0%, 100% { opacity: 0.6; }
@@ -145,7 +183,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1a0e2e 0%, #2c1654 50%, #1a0e2e 100%);
+    background: linear-gradient(135deg, var(--c-black) 0%, var(--c-bg-deep) 50%, var(--c-black) 100%);
     overflow-y: auto !important;
     padding: 40px 15px 60px;
   }
@@ -155,15 +193,24 @@
   }
   .lang-title {
     font-size: 2.8rem;
-    color: #ffd97a;
-    margin-bottom: 60px;
-    text-shadow: 0 0 30px rgba(255,200,80,0.4);
+    color: var(--c-green);
+    margin-bottom: 30px;
+    text-shadow: 0 0 30px rgba(0,255,0,0.4);
     text-align: center;
+    font-family: var(--font-title);
+    letter-spacing: 2px;
   }
   .lang-subtitle {
     font-size: 1.2rem;
-    color: rgba(255,248,224,0.85);
+    color: rgba(255,255,255,0.85);
     margin-bottom: 50px;
+  }
+  .lang-screen-logo {
+    width: clamp(140px, 30vw, 220px);
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 0 20px rgba(0,255,0,0.4));
   }
   .lang-buttons {
     display: flex;
@@ -174,8 +221,8 @@
   .lang-btn {
     width: 220px;
     height: 240px;
-    background: linear-gradient(to bottom, rgba(60,40,120,0.9), rgba(40,20,80,0.95));
-    border: 3px solid #d4af37;
+    background: linear-gradient(to bottom, rgba(0,30,5,0.95), rgba(0,15,2,0.98));
+    border: 3px solid var(--c-green);
     border-radius: 20px;
     cursor: pointer;
     display: flex;
@@ -183,30 +230,39 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    color: #fff;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+    color: var(--c-white);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.5), 0 0 0 0 rgba(0,255,0,0.0);
   }
   .lang-btn:hover {
     transform: translateY(-8px) scale(1.04);
-    box-shadow: 0 15px 40px rgba(212,175,55,0.4), 0 0 40px rgba(255,200,80,0.3);
-    border-color: #ffd97a;
+    box-shadow: 0 15px 40px rgba(0,255,0,0.5), 0 0 40px rgba(8,149,230,0.4);
+    border-color: var(--c-blue);
+    background: linear-gradient(to bottom, rgba(0,40,10,0.98), rgba(0,20,5,0.99));
   }
   .lang-flag {
     font-size: 4rem;
     font-weight: 900;
     margin-bottom: 16px;
-    color: #ffd97a;
+    color: var(--c-green);
     letter-spacing: 4px;
+    font-family: var(--font-title);
   }
   .lang-name { font-size: 1.5rem; font-weight: bold; }
-  .lang-native { font-size: 1rem; color: #ffe8a8; margin-top: 6px; }
+  .lang-native { font-size: 1rem; color: var(--c-blue); margin-top: 6px; }
 
   /* ===== MAIN MENU ===== */
   #screen-menu {
     flex-direction: column;
-    background: linear-gradient(135deg, #1a0e2e 0%, #2c1654 100%);
+    background: linear-gradient(135deg, var(--c-black) 0%, var(--c-bg-deep) 100%);
     padding: 30px 50px;
     overflow-y: auto !important;
+  }
+  .menu-logo {
+    height: 50px;
+    width: auto;
+    margin-right: 15px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(0,255,0,0.4));
   }
   .menu-header {
     display: flex;
@@ -218,17 +274,25 @@
   }
   .menu-header h1 {
     font-size: 2.5rem;
-    color: #ffd97a;
+    color: var(--c-green);
     letter-spacing: 2px;
+    font-family: var(--font-title);
+    text-shadow: 0 0 15px rgba(0,255,0,0.3);
   }
   .menu-header .lang-switch {
-    background: rgba(60,40,120,0.6);
-    border: 2px solid #d4af37;
-    color: #ffd97a;
+    background: rgba(0,30,5,0.8);
+    border: 2px solid var(--c-green);
+    color: var(--c-green);
     font-size: 1rem;
     padding: 8px 20px;
     border-radius: 8px;
     cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+  }
+  .menu-header .lang-switch:hover {
+    background: var(--c-green);
+    color: var(--c-black);
   }
   .menu-grid {
     display: grid;
@@ -237,13 +301,13 @@
     padding-bottom: 40px;
   }
   .category-card {
-    background: linear-gradient(to bottom right, rgba(70,50,140,0.85), rgba(40,20,80,0.95));
-    border: 2px solid rgba(212,175,55,0.5);
+    background: linear-gradient(to bottom right, rgba(0,40,10,0.95), rgba(0,15,5,0.98));
+    border: 2px solid var(--c-green);
     border-radius: 18px;
     padding: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 0 0 rgba(0,255,0,0);
     display: flex;
     flex-direction: column;
     min-height: 200px;
@@ -254,12 +318,12 @@
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; height: 4px;
-    background: linear-gradient(to right, transparent, #ffd97a, transparent);
+    background: linear-gradient(to right, transparent, var(--c-green), var(--c-blue), var(--c-green), transparent);
   }
   .category-card:hover {
     transform: translateY(-6px);
-    border-color: #ffd97a;
-    box-shadow: 0 12px 30px rgba(212,175,55,0.4);
+    border-color: var(--c-blue);
+    box-shadow: 0 12px 30px rgba(0,255,0,0.4), 0 0 30px rgba(8,149,230,0.3);
   }
   .category-card.disabled {
     opacity: 0.5;
@@ -269,8 +333,8 @@
   .category-icon {
     width: 70px; height: 70px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ffd97a, #d4af37);
-    color: #2a1a05;
+    background: linear-gradient(135deg, var(--c-green), var(--c-blue));
+    color: var(--c-black);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -278,35 +342,37 @@
     font-weight: 900;
     margin-bottom: 15px;
     flex-shrink: 0;
-    box-shadow: 0 4px 15px rgba(212,175,55,0.4);
+    box-shadow: 0 4px 15px rgba(0,255,0,0.5);
+    font-family: var(--font-title);
+    border: 2px solid rgba(255,255,255,0.3);
   }
   .category-name {
     font-size: 1.3rem;
     font-weight: bold;
-    color: #fff;
+    color: var(--c-white);
     margin-bottom: 8px;
   }
   .category-desc {
     font-size: 0.95rem;
-    color: rgba(255,248,224,0.75);
+    color: rgba(255,255,255,0.78);
     flex-grow: 1;
     line-height: 1.4;
   }
   .category-status {
     margin-top: 15px;
     font-size: 0.85rem;
-    color: #ffd97a;
+    color: var(--c-green);
     font-weight: bold;
   }
   .category-status.coming {
-    color: rgba(255,200,150,0.7);
+    color: var(--c-blue);
     font-style: italic;
   }
 
   /* ===== CATEGORY VIEW ===== */
   #screen-category {
     flex-direction: column;
-    background: linear-gradient(135deg, #1a0e2e 0%, #2c1654 100%);
+    background: linear-gradient(135deg, var(--c-black) 0%, var(--c-bg-deep) 100%);
     padding: 30px 50px;
     overflow-y: auto !important;
   }
@@ -319,18 +385,25 @@
     margin-bottom: 25px;
   }
   .back-btn {
-    background: rgba(60,40,120,0.6);
-    border: 2px solid #d4af37;
-    color: #ffd97a;
+    background: rgba(0,30,5,0.8);
+    border: 2px solid var(--c-green);
+    color: var(--c-green);
     font-size: 1.1rem;
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
   }
-  .back-btn:hover { background: rgba(80,60,160,0.8); }
+  .back-btn:hover {
+    background: var(--c-green);
+    color: var(--c-black);
+  }
   .category-header h1 {
     font-size: 2.2rem;
-    color: #ffd97a;
+    color: var(--c-green);
+    font-family: var(--font-title);
+    letter-spacing: 1px;
   }
   .episode-list {
     display: flex;
@@ -339,8 +412,8 @@
     padding-bottom: 40px;
   }
   .episode-card {
-    background: linear-gradient(to right, rgba(70,50,140,0.7), rgba(40,20,80,0.9));
-    border: 2px solid rgba(212,175,55,0.5);
+    background: linear-gradient(to right, rgba(0,30,5,0.9), rgba(0,15,3,0.95));
+    border: 2px solid var(--c-green);
     border-radius: 14px;
     padding: 20px 25px;
     cursor: pointer;
@@ -351,18 +424,20 @@
   }
   .episode-card:hover {
     transform: translateX(6px);
-    border-color: #ffd97a;
-    box-shadow: 0 6px 20px rgba(212,175,55,0.3);
+    border-color: var(--c-blue);
+    box-shadow: 0 6px 20px rgba(0,255,0,0.4), 0 0 20px rgba(8,149,230,0.3);
   }
   .episode-num {
     font-size: 2.5rem;
     font-weight: 900;
-    color: #ffd97a;
+    color: var(--c-green);
     min-width: 60px;
+    font-family: var(--font-title);
+    text-shadow: 0 0 10px rgba(0,255,0,0.4);
   }
   .episode-info { flex-grow: 1; }
-  .episode-info h3 { font-size: 1.4rem; color: #fff; margin-bottom: 6px; }
-  .episode-info p { font-size: 1rem; color: rgba(255,248,224,0.7); }
+  .episode-info h3 { font-size: 1.4rem; color: var(--c-white); margin-bottom: 6px; }
+  .episode-info p { font-size: 1rem; color: rgba(255,255,255,0.7); }
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
     20% { transform: translateX(-8px); }
@@ -432,12 +507,12 @@
     position: absolute;
     bottom: 40px;
     left: 5%; right: 5%;
-    background: linear-gradient(to bottom, rgba(20,15,40,0.92), rgba(40,30,80,0.96));
-    border: 3px solid #d4af37;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,20,5,0.96));
+    border: 3px solid var(--c-green);
     border-radius: 18px;
     padding: 20px 30px;
-    color: #fff;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(212,175,55,0.15);
+    color: var(--c-white);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,255,0,0.15), 0 0 30px rgba(0,255,0,0.2);
     z-index: 30;
     opacity: 0;
     transform: translateY(30px);
@@ -445,10 +520,10 @@
     min-height: 130px;
   }
   #ep-dialogue.show { opacity: 1; transform: translateY(0); }
-  #ep-speaker { color: #ffd97a; font-weight: bold; font-size: 1.2rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-  #ep-text { font-size: 1.4rem; line-height: 1.5; color: #fff; }
-  .arabic { font-size: 2.2rem; color: #ffd97a; text-align: center; margin: 10px 0 5px; direction: rtl; font-family: 'Times New Roman', serif; }
-  .translit { font-style: italic; color: #ffe8a8; text-align: center; margin-bottom: 5px; }
+  #ep-speaker { color: var(--c-green); font-weight: bold; font-size: 1.2rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-title); text-shadow: 0 0 10px rgba(0,255,0,0.4); }
+  #ep-text { font-size: 1.4rem; line-height: 1.5; color: var(--c-white); font-family: var(--font-body); }
+  .arabic { font-size: 2.2rem; color: var(--c-green); text-align: center; margin: 10px 0 5px; direction: rtl; font-family: var(--font-arabic); font-weight: 700; }
+  .translit { font-style: italic; color: var(--c-blue); text-align: center; margin-bottom: 5px; }
 
   #ep-choices {
     position: absolute;
@@ -466,20 +541,24 @@
   }
   #ep-choices.show { opacity: 1; pointer-events: auto; }
   .ep-choice {
-    background: linear-gradient(to right, rgba(40,30,80,0.95), rgba(70,50,140,0.95));
-    border: 2px solid #d4af37;
-    color: white;
+    background: linear-gradient(to right, rgba(0,30,5,0.95), rgba(0,15,3,0.95));
+    border: 2px solid var(--c-green);
+    color: var(--c-white);
     font-size: 1.3rem;
     padding: 16px 24px;
     border-radius: 12px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease;
+    font-family: var(--font-body);
   }
   .ep-choice:hover {
-    background: linear-gradient(to right, rgba(80,60,160,0.95), rgba(120,90,210,0.95));
+    background: linear-gradient(to right, var(--c-green), var(--c-blue));
+    color: var(--c-black);
     transform: scale(1.03);
-    box-shadow: 0 0 20px rgba(212,175,55,0.5);
+    box-shadow: 0 0 30px rgba(0,255,0,0.6);
+    border-color: var(--c-blue);
+    font-weight: bold;
   }
 
   #ep-recap {
@@ -897,6 +976,7 @@
   <div class="screen" id="screen-title">
     <div class="title-content">
       <div class="title-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+      <img class="title-logo" src="assets/logo.png" alt="Animuslim">
       <h1 class="title-main">Animuslim</h1>
       <p class="title-sub" id="title-tagline">Les Aventures Islamiques pour Enfants</p>
       <p class="title-cta" id="title-cta">Cliquez n'importe où pour commencer</p>
@@ -905,6 +985,7 @@
 
   <!-- LANGUAGE SCREEN -->
   <div class="screen" id="screen-lang">
+    <img class="lang-screen-logo" src="assets/logo.png" alt="Animuslim">
     <h2 class="lang-title" id="lang-title">Choisis ta langue</h2>
     <p class="lang-subtitle" id="lang-subtitle">Choose your language · Pilih bahasa</p>
     <div class="lang-buttons">
@@ -929,7 +1010,10 @@
   <!-- MAIN MENU -->
   <div class="screen" id="screen-menu">
     <div class="menu-header">
-      <h1 id="menu-title">Choisis un cours</h1>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img class="menu-logo" src="assets/logo.png" alt="">
+        <h1 id="menu-title">Choisis un cours</h1>
+      </div>
       <div style="display: flex; gap: 10px;">
         <button class="lang-switch" id="settings-btn" title="Paramètres">⚙</button>
         <button class="lang-switch" id="lang-switch">FR / EN / ID</button>
@@ -1325,9 +1409,16 @@ function markEpisodeComplete(epId) {
 //   ASSETS
 // =============================================================
 const ASSETS = {
+  // Décors
   bgPrayerHall: 'assets/backgrounds/salle_priere.jpg',
   bgOasis: 'assets/backgrounds/oasis.png',
   bgSalleClasse: 'assets/backgrounds/salle_classe.jpg',
+  bgForet: 'assets/backgrounds/foret_montagne.png',
+  bgCouloir: 'assets/backgrounds/couloir_ecole.jpg',
+  bgCourMosquee: 'assets/backgrounds/cour_mosquee.jpg',
+  bgCourEcole: 'assets/backgrounds/cour_ecole.jpg',
+  bgMadrasaExt: 'assets/backgrounds/madrasa_exterieur.jpg',
+  // Personnages
   hamidNeutre: 'assets/characters/yusuf_neutre.png',
   hamidJoie: 'assets/characters/yusuf_joie.png',
   ustazAhmed: 'assets/characters/ustaz_ahmed.png',
@@ -1335,6 +1426,7 @@ const ASSETS = {
   laura: 'assets/characters/laura.png',
   mamadou: 'assets/characters/mamadou.png',
   moustique: 'assets/characters/moustique.png',
+  // FX
   speedLines: 'assets/fx/speed_lines.mp4'
 };
 
@@ -1907,7 +1999,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ La Shahada est le 1er pilier de l'islam", "✓ Allah est Unique, Muhammad ﷺ est Son messager", "✓ Convaincre le coeur, dire avec la langue, agir avec le corps"], en: ["✓ The Shahada is the 1st pillar of Islam", "✓ Allah is One, Muhammad ﷺ is His messenger", "✓ Convince the heart, say with the tongue, act with the body"], id: ["✓ Syahadat adalah rukun Islam pertama", "✓ Allah Esa, Muhammad ﷺ adalah utusan-Nya", "✓ Yakinkan hati, ucapkan dengan lisan, amalkan dengan tubuh"] }
   },
   pilier_wudu: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourMosquee', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Avant la prière, il faut être propre. Ustaz Ahmed apprend à Hamid les ablutions (wudu).", en: "Before prayer, you must be clean. Ustaz Ahmed teaches Hamid the ablutions (wudu).", id: "Sebelum sholat, harus bersih. Ustaz Ahmed mengajari Hamid tentang wudhu." },
     lines: [
@@ -1947,7 +2039,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ 5 prières par jour : Fajr, Dhuhr, Asr, Maghrib, Icha", "✓ Origine : Isra wal Mi'raj", "✓ La prière est le 2e pilier de l'islam"], en: ["✓ 5 daily prayers: Fajr, Dhuhr, Asr, Maghrib, Isha", "✓ Origin: Isra wal Mi'raj", "✓ Prayer is the 2nd pillar of Islam"], id: ["✓ 5 sholat harian: Subuh, Dzuhur, Ashar, Maghrib, Isya", "✓ Asal: Isra Mi'raj", "✓ Sholat adalah rukun Islam ke-2"] }
   },
   pilier_zakat: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourEcole', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Ustaz Ahmed enseigne aux enfants la zakat — l'aumône obligatoire.", en: "Ustaz Ahmed teaches the children the zakat — obligatory alms.", id: "Ustaz Ahmed mengajarkan anak-anak tentang zakat — sedekah wajib." },
     lines: [
@@ -1967,7 +2060,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ La zakat purifie nos biens (Coran 9:103)", "✓ Donner pour Allah, c'est aussi le temps et le partage", "✓ Le bon musulman pense à son prochain"], en: ["✓ Zakat purifies our wealth (Quran 9:103)", "✓ Giving for Allah includes time and sharing", "✓ The good Muslim thinks of his neighbor"], id: ["✓ Zakat menyucikan harta (QS 9:103)", "✓ Memberi untuk Allah mencakup waktu dan berbagi", "✓ Muslim yang baik memikirkan sesama"] }
   },
   pilier_ramadan: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgMadrasaExt', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Le mois de Ramadan approche. Ustaz Ahmed explique le jeûne aux enfants.", en: "The month of Ramadan is approaching. Ustaz Ahmed explains fasting to the children.", id: "Bulan Ramadan mendekat. Ustaz Ahmed menjelaskan puasa kepada anak-anak." },
     lines: [
@@ -2007,7 +2100,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Hajj : pèlerinage à La Mecque", "✓ Une fois dans la vie pour qui en a les moyens", "✓ Tawaf, sa'i, Arafa : rites du Prophète Ibrahim ﷺ"], en: ["✓ Hajj: pilgrimage to Makkah", "✓ Once in life for those who can", "✓ Tawaf, sa'i, Arafat: rites of Prophet Ibrahim ﷺ"], id: ["✓ Haji: ibadah ke Makkah", "✓ Sekali seumur hidup bagi yang mampu", "✓ Tawaf, sa'i, Arafah: ritus Nabi Ibrahim ﷺ"] }
   },
   adab_salam: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCouloir', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Hamid croise un nouveau dans le couloir mais ne le salue pas. Ustaz le rappelle.", en: "Hamid passes someone new in the hall but doesn't greet. Ustaz reminds him.", id: "Hamid berpapasan dengan orang baru di koridor tapi tidak menyapa. Ustaz mengingatkan." },
     lines: [
@@ -2045,7 +2138,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Pas même UFF aux parents (Coran 17:23)", "✓ Répondre vite et avec respect", "✓ L'agrément d'Allah est dans l'agrément du parent (Tirmidhi)"], en: ["✓ Not even UFF to parents (Quran 17:23)", "✓ Answer quickly and respectfully", "✓ Allah's pleasure is in the parent's pleasure (Tirmidhi)"], id: ["✓ Bahkan AH pun jangan ke orang tua (QS 17:23)", "✓ Jawab cepat dan hormat", "✓ Ridha Allah pada ridha orang tua (Tirmidzi)"] }
   },
   adab_eau: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourMosquee', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Hamid laisse couler le robinet. Ustaz Ahmed l'aperçoit.", en: "Hamid leaves the tap running. Ustaz Ahmed notices.", id: "Hamid membiarkan keran mengalir. Ustaz Ahmed melihatnya." },
     lines: [
@@ -2086,7 +2179,7 @@ const SIMPLE_EPISODES = {
 
   // ===== 99 NOMS D'ALLAH (5 noms) =====
   asma_ar_rahman: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourMosquee', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Le 1er des 99 plus beaux noms : Ar-Rahman, Le Tout-Miséricordieux.", en: "The 1st of the 99 beautiful names: Ar-Rahman, The Most Merciful.", id: "Yang pertama dari 99 nama indah: Ar-Rahman, Yang Maha Pengasih." },
     lines: [
@@ -2106,7 +2199,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Ar-Rahman = miséricorde universelle (vie d'ici-bas)", "✓ Allah dit : « Ma miséricorde s'étend sur toute chose » (7:156)", "✓ Allah donne du temps pour se repentir"], en: ["✓ Ar-Rahman = universal mercy (this life)", "✓ Allah says: \"My mercy embraces all things\" (7:156)", "✓ Allah gives time to repent"], id: ["✓ Ar-Rahman = rahmat universal (dunia)", "✓ Allah berfirman: \"Rahmat-Ku meliputi segalanya\" (7:156)", "✓ Allah memberi waktu untuk bertaubat"] }
   },
   asma_ar_rahim: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'laura', flip1: true,
+    speaker2Name: 'Laura',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Le 2e nom : Ar-Rahim, Le Très-Miséricordieux — la miséricorde particulière aux croyants.", en: "The 2nd name: Ar-Rahim, The Especially Merciful — mercy specific to believers.", id: "Nama ke-2: Ar-Rahim, Yang Maha Penyayang — rahmat khusus mukmin." },
     lines: [
@@ -2126,7 +2220,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Ar-Rahim = miséricorde réservée aux croyants", "✓ Ar-Rahman + Ar-Rahim = formule Bismillāh", "✓ Méritée par foi + actes"], en: ["✓ Ar-Rahim = mercy reserved for believers", "✓ Ar-Rahman + Ar-Rahim = Bismillāh formula", "✓ Earned by faith + deeds"], id: ["✓ Ar-Rahim = rahmat khusus mukmin", "✓ Ar-Rahman + Ar-Rahim = formula Bismillāh", "✓ Didapat dengan iman + amal"] }
   },
   asma_al_malik: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgMadrasaExt', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Le nom Al-Malik — Le Souverain absolu de tout l'univers.", en: "The name Al-Malik — The absolute Sovereign of the universe.", id: "Nama Al-Malik — Penguasa mutlak alam semesta." },
     lines: [
@@ -2146,7 +2240,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Al-Malik = Souverain absolu", "✓ Coran 114:2 : « le Souverain des hommes »", "✓ Au Jour du Jugement : Allah seul reste Roi (40:16)"], en: ["✓ Al-Malik = absolute Sovereign", "✓ Quran 114:2: \"the Sovereign of mankind\"", "✓ On Judgment Day: only Allah remains King (40:16)"], id: ["✓ Al-Malik = Penguasa mutlak", "✓ QS 114:2: \"penguasa manusia\"", "✓ Pada Kiamat: hanya Allah yang tetap Raja (40:16)"] }
   },
   asma_al_quddus: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgPrayerHall', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Al-Quddus — Le Pur, Le Saint. Allah est exempt de toute imperfection.", en: "Al-Quddus — The Pure, The Holy. Allah is free from all imperfection.", id: "Al-Quddus — Yang Maha Suci. Allah bebas dari kekurangan." },
     lines: [
@@ -2166,7 +2261,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Al-Quddus = Le Pur, le Saint", "✓ Allah ne dort pas, ne fatigue pas (2:255)", "✓ SubhanAllah rappelle Sa pureté"], en: ["✓ Al-Quddus = The Pure, The Holy", "✓ Allah doesn't sleep or tire (2:255)", "✓ SubhanAllah recalls His purity"], id: ["✓ Al-Quddus = Yang Maha Suci", "✓ Allah tak tidur, tak letih (2:255)", "✓ SubhanAllah mengingat kesucian-Nya"] }
   },
   asma_as_salam: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCouloir', speaker1: 'ustazAhmed', speaker2: 'zamina', flip1: true,
+    speaker2Name: 'Zamina',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "As-Salam — La Source de la paix. Allah est la paix elle-même.", en: "As-Salam — The Source of peace. Allah is peace itself.", id: "As-Salam — Sumber kedamaian. Allah adalah kedamaian itu sendiri." },
     lines: [
@@ -2207,7 +2303,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Adam ﷺ : créé de terre, premier prophète", "✓ Iblis a refusé par orgueil → maudit", "✓ L'orgueil ferme la porte du paradis (Muslim)"], en: ["✓ Adam ﷺ: made of earth, first prophet", "✓ Iblis refused out of pride → cursed", "✓ Pride closes paradise's door (Muslim)"], id: ["✓ Adam ﷺ: dari tanah, nabi pertama", "✓ Iblis menolak karena sombong → terlaknat", "✓ Kesombongan menutup pintu surga (Muslim)"] }
   },
   prophet_nuh: {
-    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgForet', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "L'histoire de Nuh ﷺ — l'arche et le grand déluge.", en: "The story of Nuh ﷺ — the ark and the great flood.", id: "Kisah Nuh ﷺ — bahtera dan banjir besar." },
     lines: [
@@ -2247,7 +2343,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Ibrahim ﷺ a brisé les idoles", "✓ Le feu lui a obéi (Coran 21:69)", "✓ Tawakkul = confiance totale en Allah"], en: ["✓ Ibrahim ﷺ broke the idols", "✓ Fire obeyed him (Quran 21:69)", "✓ Tawakkul = total trust in Allah"], id: ["✓ Ibrahim ﷺ hancurkan berhala", "✓ Api taat padanya (QS 21:69)", "✓ Tawakkal = pasrah total pada Allah"] }
   },
   prophet_yusuf: {
-    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'laura', flip1: true,
+    speaker2Name: 'Laura',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Yusuf ﷺ — l'enfant aux songes, jeté dans un puits, devenu roi d'Égypte.", en: "Yusuf ﷺ — the child of dreams, thrown in a well, became king of Egypt.", id: "Yusuf ﷺ — anak yang bermimpi, dilempar ke sumur, menjadi raja Mesir." },
     lines: [
@@ -2285,7 +2382,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Musa ﷺ = Kalimullah (qui parle à Allah)", "✓ Mer fendue par ordre d'Allah (26:63)", "✓ Pharaon noyé pour son orgueil"], en: ["✓ Musa ﷺ = Kalimullah (who spoke to Allah)", "✓ Sea parted by Allah's order (26:63)", "✓ Pharaoh drowned for his pride"], id: ["✓ Musa ﷺ = Kalimullah (yang berbicara dengan Allah)", "✓ Laut terbelah atas perintah Allah (26:63)", "✓ Firaun tenggelam karena sombong"] }
   },
   prophet_sulayman: {
-    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgForet', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Sulayman ﷺ — le roi qui parlait avec les fourmis et commandait aux djinns.", en: "Sulayman ﷺ — the king who spoke with ants and commanded jinns.", id: "Sulayman ﷺ — raja yang berbicara dengan semut dan memerintah jin." },
     lines: [
@@ -2382,7 +2480,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Khadija : 1ère musulmane, épouse aimée", "✓ A soutenu le Prophète ﷺ dès Hira", "✓ Une des 4 meilleures femmes (Bukhari)"], en: ["✓ Khadija: 1st Muslim, beloved wife", "✓ Supported the Prophet ﷺ from Hira", "✓ One of 4 best women (Bukhari)"], id: ["✓ Khadijah: muslimah pertama, istri tercinta", "✓ Mendukung Nabi ﷺ sejak Hira", "✓ Salah satu dari 4 wanita terbaik (Bukhari)"] }
   },
   bio_hira: {
-    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgForet', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "À 40 ans, Muhammad ﷺ se retirait dans la grotte de Hira pour méditer. Là, l'ange Jibril ﷺ apparut.", en: "At 40, Muhammad ﷺ retreated to Hira cave to meditate. There, angel Jibril ﷺ appeared.", id: "Pada usia 40, Muhammad ﷺ ber-uzlah di gua Hira. Di sana, malaikat Jibril ﷺ muncul." },
     lines: [
@@ -2420,7 +2518,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Hijra : 622 ap. J.-C., Makkah → Madinah", "✓ Grotte de Thawr, Allah les protège", "✓ Début du calendrier hégirien"], en: ["✓ Hijra: 622 CE, Makkah → Madinah", "✓ Thawr cave, Allah protects them", "✓ Start of Hijri calendar"], id: ["✓ Hijrah: 622 M, Makkah → Madinah", "✓ Gua Tsur, Allah melindungi", "✓ Awal kalender Hijriah"] }
   },
   bio_conquete: {
-    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgMadrasaExt', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "An 8 de l'Hégire (630 ap. J.-C.) : le Prophète ﷺ entre à La Mecque avec 10 000 musulmans, sans combat.", en: "Year 8 Hijri (630 CE): the Prophet ﷺ enters Makkah with 10,000 Muslims, without battle.", id: "Tahun 8 H (630 M): Nabi ﷺ memasuki Makkah dengan 10.000 Muslim, tanpa pertempuran." },
     lines: [
@@ -2460,7 +2559,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Coran révélé par Jibril ﷺ en 23 ans (610-632)", "✓ Sur le coeur du Prophète ﷺ", "✓ Coran 26:193-194"], en: ["✓ Quran revealed by Jibril ﷺ in 23 years (610-632)", "✓ On the Prophet's ﷺ heart", "✓ Quran 26:193-194"], id: ["✓ Al-Quran turun via Jibril ﷺ selama 23 tahun (610-632)", "✓ Ke hati Nabi ﷺ", "✓ QS 26:193-194"] }
   },
   quran_compilation: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgMadrasaExt', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Après la mort du Prophète ﷺ, Abu Bakr (1er calife) a fait compiler le Coran en un livre.", en: "After the Prophet's ﷺ death, Abu Bakr (1st caliph) compiled the Quran into a book.", id: "Setelah Nabi ﷺ wafat, Abu Bakr (khalifah ke-1) mengumpulkan Al-Quran menjadi buku." },
     lines: [
@@ -2479,7 +2578,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Compilation par Abu Bakr (Zayd ibn Thabit)", "✓ Cause : mort des huffaz à Yamama", "✓ Allah préserve Lui-même Son Livre (15:9)"], en: ["✓ Compilation by Abu Bakr (Zayd ibn Thabit)", "✓ Cause: death of huffaz at Yamama", "✓ Allah Himself preserves His Book (15:9)"], id: ["✓ Pengumpulan oleh Abu Bakr (Zayd ibn Tsabit)", "✓ Sebab: huffaz syahid di Yamamah", "✓ Allah sendiri menjaga Kitab-Nya (15:9)"] }
   },
   quran_uthman: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourMosquee', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Sous ʿUthman (3e calife), un mushaf officiel fut établi pour unifier la lecture dans tout l'empire.", en: "Under ʿUthman (3rd caliph), an official mushaf was established to unify recitation across the empire.", id: "Di masa ʿUtsman (khalifah ke-3), mushaf resmi ditetapkan untuk menyatukan bacaan di seluruh kekhalifahan." },
     lines: [
@@ -2557,7 +2657,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ La création prouve un Créateur Unique (21:22)", "✓ Coran 67:3 : aucune fissure dans la création", "✓ L'ordre du monde = preuve du Tawhid"], en: ["✓ Creation proves One Creator (21:22)", "✓ Quran 67:3: no rift in creation", "✓ World order = proof of Tawhid"], id: ["✓ Penciptaan membuktikan Pencipta Esa (21:22)", "✓ QS 67:3: tak ada keretakan", "✓ Keteraturan dunia = bukti Tauhid"] }
   },
   tawhid_rububiyya: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourMosquee', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Premier type de Tawhid : Tawhid ar-Rububiyya — Allah seul Créateur, Pourvoyeur, Maître.", en: "First type of Tawhid: Tawhid ar-Rububiyya — Allah alone Creator, Provider, Master.", id: "Tauhid pertama: Tauhid ar-Rububiyyah — Allah satu-satunya Pencipta, Pemberi rezeki, Penguasa." },
     lines: [
@@ -2595,7 +2695,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Uluhiyya = adoration exclusive d'Allah", "✓ Coran 16:36 : message de TOUS les prophètes", "✓ Pas d'intermédiaire (Coran 2:186)"], en: ["✓ Uluhiyya = exclusive worship of Allah", "✓ Quran 16:36: message of ALL prophets", "✓ No intermediary (Quran 2:186)"], id: ["✓ Uluhiyyah = ibadah eksklusif untuk Allah", "✓ QS 16:36: pesan SEMUA nabi", "✓ Tanpa perantara (QS 2:186)"] }
   },
   tawhid_asma: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgMadrasaExt', speaker1: 'ustazAhmed', speaker2: 'laura', flip1: true,
+    speaker2Name: 'Laura',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Tawhid al-Asma' wa as-Sifat — l'unicité d'Allah dans Ses noms et attributs.", en: "Tawhid al-Asma' wa as-Sifat — Allah's Oneness in His names and attributes.", id: "Tauhid al-Asma' wa as-Sifat — Keesaan Allah dalam nama dan sifat-Nya." },
     lines: [
@@ -2654,7 +2755,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ ا = Alif (1ère lettre)", "✓ Son : « A »", "✓ 1ère lettre du nom d'Allah"], en: ["✓ ا = Alif (1st letter)", "✓ Sound: \"A\"", "✓ 1st letter of Allah's name"], id: ["✓ ا = Alif (huruf 1)", "✓ Bunyi: \"A\"", "✓ Huruf pertama nama Allah"] }
   },
   alphabet_ba: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "La 2e lettre : ب (Ba). Comme dans Bismillah !", en: "Second letter: ب (Ba). Like in Bismillah!", id: "Huruf kedua: ب (Ba). Seperti dalam Bismillah!" },
     lines: [
@@ -2733,7 +2835,7 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Sukun ْ = lettre sans voyelle", "✓ Shadda ّ = lettre doublée", "✓ Critical pour le sens et les noms d'Allah"], en: ["✓ Sukun ْ = letter without vowel", "✓ Shadda ّ = doubled letter", "✓ Critical for meaning and Allah's names"], id: ["✓ Sukun ْ = huruf tanpa harakat", "✓ Syaddah ّ = huruf ganda", "✓ Penting untuk arti dan nama Allah"] }
   },
   tajwid_idgham: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgPrayerHall', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Idgham — quand 2 lettres se rencontrent et la 1re fond dans la 2e.", en: "Idgham — when 2 letters meet and 1st merges into 2nd.", id: "Idgham — ketika 2 huruf bertemu dan yang pertama meleleh ke yang kedua." },
     lines: [
@@ -2771,7 +2873,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Ikhfa = caché entre clair et fondu", "✓ 15 lettres", "✓ Avec ghunna nasale"], en: ["✓ Ikhfa = hidden between clear and merged", "✓ 15 letters", "✓ With nasal ghunna"], id: ["✓ Ikhfa = sembunyi antara jelas dan lebur", "✓ 15 huruf", "✓ Dengan ghunnah"] }
   },
   tajwid_madd: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgPrayerHall', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Madd — la prolongation. Certaines voyelles se prolongent en chantant.", en: "Madd — lengthening. Some vowels extend in song.", id: "Madd — pemanjangan. Beberapa harakat dipanjangkan." },
     lines: [
@@ -2830,7 +2933,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ As-Salāmu `Alaykum = paix sur vous", "✓ Réponse : Wa `Alaykumu s-Salām...", "✓ Coran 4:86 : répondre par mieux ou pareil"], en: ["✓ As-Salāmu `Alaykum = peace upon you", "✓ Reply: Wa `Alaykumu s-Salām...", "✓ Quran 4:86: reply with better or equal"], id: ["✓ As-Salāmu `Alaykum = damai atasmu", "✓ Jawab: Wa `Alaykumu s-Salām...", "✓ QS 4:86: balas dengan lebih baik atau setara"] }
   },
   arabic_famille: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourEcole', speaker1: 'ustazAhmed', speaker2: 'laura', flip1: true,
+    speaker2Name: 'Laura',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Le vocabulaire de la famille en arabe.", en: "Family vocabulary in Arabic.", id: "Kosakata keluarga dalam bahasa Arab." },
     lines: [
@@ -2849,7 +2953,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ أَب=père, أُمّ=mère, أَخ=frère, أُخْت=soeur", "✓ Yā Abi / Yā Ummi (vocatif)", "✓ Famille = Ahl ou `Ā'ila"], en: ["✓ أَب=father, أُمّ=mother, أَخ=brother, أُخْت=sister", "✓ Yā Abi / Yā Ummi (vocative)", "✓ Family = Ahl or `Ā'ila"], id: ["✓ أَب=ayah, أُمّ=ibu, أَخ=saudara, أُخْت=saudari", "✓ Yā Abi / Yā Ummi (panggilan)", "✓ Keluarga = Ahl atau `Ā'ila"] }
   },
   arabic_couleurs: {
-    bg: 'bgSalleClasse', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgForet', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Les couleurs et les animaux en arabe.", en: "Colors and animals in Arabic.", id: "Warna dan hewan dalam bahasa Arab." },
     lines: [
@@ -2946,7 +3051,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ ʿUmar Al-Faruq, 2e calife", "✓ Ennemi devenu pilier de l'islam", "✓ La guidée d'Allah change tout"], en: ["✓ ʿUmar Al-Faruq, 2nd caliph", "✓ Enemy became pillar of Islam", "✓ Allah's guidance changes everything"], id: ["✓ ʿUmar Al-Faruq, khalifah ke-2", "✓ Musuh jadi tiang Islam", "✓ Petunjuk Allah mengubah segalanya"] }
   },
   sahaba_bilal: {
-    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgCourMosquee', speaker1: 'ustazAhmed', speaker2: 'mamadou', flip1: true,
+    speaker2Name: 'Mamadou',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Bilal ibn Rabah — esclave africain libéré, 1er muezzin de l'islam.", en: "Bilal ibn Rabah — freed African slave, 1st muezzin of Islam.", id: "Bilal ibn Rabah — budak Afrika yang dibebaskan, muadzin pertama Islam." },
     lines: [
@@ -2965,7 +3071,8 @@ const SIMPLE_EPISODES = {
     recap: { fr: ["✓ Bilal : esclave devenu 1er muezzin", "✓ Pas de racisme en islam (Coran 49:13)", "✓ Seule la piété compte"], en: ["✓ Bilal: slave became 1st muezzin", "✓ No racism in Islam (Quran 49:13)", "✓ Only piety counts"], id: ["✓ Bilal: budak jadi muadzin pertama", "✓ Tak ada rasisme dalam Islam (QS 49:13)", "✓ Hanya takwa yang dinilai"] }
   },
   sahaba_khadija: {
-    bg: 'bgOasis', speaker1: 'ustazAhmed', speaker2: 'hamidNeutre', flip1: true,
+    bg: 'bgMadrasaExt', speaker1: 'ustazAhmed', speaker2: 'laura', flip1: true,
+    speaker2Name: 'Laura',
     speaker1Name: 'Ustaz Ahmed', speaker2Name: 'Hamid',
     intro: { fr: "Khadija bint Khuwaylid — première musulmane, épouse aimée du Prophète ﷺ.", en: "Khadija bint Khuwaylid — first Muslim woman, beloved wife of the Prophet ﷺ.", id: "Khadijah binti Khuwailid — muslimah pertama, istri tercinta Nabi ﷺ." },
     lines: [
