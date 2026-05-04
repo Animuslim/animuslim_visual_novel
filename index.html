@@ -518,6 +518,10 @@
     transform: translateY(30px);
     transition: all 0.4s ease;
     min-height: 130px;
+    max-height: 45vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-green) rgba(0,0,0,0.5);
   }
   #ep-dialogue.show { opacity: 1; transform: translateY(0); }
   #ep-speaker { color: var(--c-green); font-weight: bold; font-size: 1.2rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-title); text-shadow: 0 0 10px rgba(0,255,0,0.4); }
@@ -538,6 +542,10 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
+    max-height: 55vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-blue) rgba(0,0,0,0.5);
   }
   #ep-choices.show { opacity: 1; pointer-events: auto; }
   .ep-choice {
@@ -568,8 +576,10 @@
     flex-direction: column; align-items: center; justify-content: center;
     z-index: 60;
     color: #2a1a05;
-    padding: 40px;
+    padding: 60px 40px;
     text-align: center;
+    overflow-y: auto;
+    justify-content: flex-start;
   }
   #ep-recap.show { display: flex; }
   #ep-recap h2 { font-size: 3rem; margin-bottom: 30px; color: #4a2a05; }
